@@ -1,0 +1,23 @@
+Package: PHAB
+Type: Package
+Title: Calculate scores for PHAB
+Version: 0.0.1.9000
+Date: 2017-10-30
+Description: Calculate scores for the Physical Habitat (PHAB) index
+BugReports: https://github.com/fawda123/PHAB/issues
+License: CC0
+LazyData: true
+Imports:
+  dplyr
+Depends:
+  R (>= 3.4.1)
+Authors@R: c(
+  person(given = "Marcus W.", family = "Beck",
+         role = c("aut","cre"),
+         email = "marcusb@sccwrp.org"),
+  person(given = "Raphael", family = "Mazor",
+         role = "aut", 
+         email = "raphaelm@sccwrp.org"
+  )
+)
+RoxygenNote: 6.0.1
