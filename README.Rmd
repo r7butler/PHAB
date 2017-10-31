@@ -1,1 +1,13 @@
 # README
+
+This package contains materials to calculates scores of physical habitat integrity, or PHAB, for California streams. 
+
+The core function is `IPI` that requires station and phab data as input.
+
+```{r, echo = F, message = F, warning = F}
+devtools::load_all()
+```
+```{r}
+IPI(stations, phab)
+```
+
