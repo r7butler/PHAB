@@ -5,6 +5,19 @@
 
 This package contains materials to calculates scores of physical habitat integrity, or PHAB, for California streams. 
 
+### Installation
+
+Install the package as follows:
+
+```{r, eval = FALSE}
+install.packages('devtools')
+library(devtools)
+install_github('SCCWRP/PHAB')
+library(PHAB)
+```
+
+### Usage
+
 The core function is `IPI` that requires station and phab data as input.
 
 ```{r, echo = F, message = F, warning = F}

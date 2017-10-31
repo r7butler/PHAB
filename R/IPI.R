@@ -9,6 +9,7 @@
 #' 
 #' @importFrom reshape2 dcast
 #' @importFrom plyr ddply join summarize
+#' @import randomForest
 #' 
 #' @export
 #'
