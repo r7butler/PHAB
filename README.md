@@ -6,7 +6,7 @@
 [![Travis-CI Build Status](https://travis-ci.org/SCCWRP/PHAB.svg?branch=master)](https://travis-ci.org/SCCWRP/PHAB)
 [![DOI](https://zenodo.org/badge/108920024.svg)](https://zenodo.org/badge/latestdoi/108920024)
 
-This package contains materials to calculates scores of physical habitat integrity, or PHAB, for California streams. 
+This package contains materials to calculate scores of physical habitat integrity, or PHAB, for California streams. 
 
 ### Installation
 
