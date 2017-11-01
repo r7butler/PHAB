@@ -68,3 +68,40 @@ IPI(stations, phab)
 ## 6    0.95   0.95
 ```
 
+Error checks are used to verify correct formatting of the input data.  The following checks are made:
+
+* No duplicate station codes in `stations`
+* All station codes in `stations` are in `phab` and the converse
+* All required fields in `stations` and `phab`
+* All required PHAB variables are present in the `variable` field of `phab` for each station and sample date
+* No duplicate results for PHAB variables at each station and sample date
+* All input variables for `stations` and `phab` are non-negative. The variables `XBKF_W`, `H_Aq_Hab`, `Ev_FlowHab`, and `H_SubNat` in `phab` must also be greater than zero.
+
+The `chkinp` function can be used independently to check formatting of the input data.  The function will return an error if the data are formatted incorrectly. 
+
+```r
+stations$StationCode[1] <- stations$StationCode[2]
+chkinp(stations, phab)
+```
+
+```
+## Error: remove duplicated stations: 205PS0157
+```
+
+```r
+data(stations)
+phab <- subset(phab, !phab$Variable %in% 'XSLOPE')
+chkinp(stations, phab)
+```
+
+```
+## Error: Required PHAB variables not present:
+## 
+## 105PS0107, 9/14/2009:  XSLOPE
+## 205PS0157, 6/19/2012:  XSLOPE
+## 305PS0057, 6/16/2009:  XSLOPE
+## 504PS0147, 6/23/2008:  XSLOPE
+## 632PS0007, 7/23/2008:  XSLOPE
+## 901PS0057, 5/14/2008:  XSLOPE
+```
+

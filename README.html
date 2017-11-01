@@ -173,6 +173,30 @@ library(PHAB)</code></pre>
 ## 4    1.00   1.00
 ## 5    1.00   1.00
 ## 6    0.95   0.95</code></pre>
+<p>Error checks are used to verify correct formatting of the input data. The following checks are made:</p>
+<ul>
+<li>No duplicate station codes in <code>stations</code></li>
+<li>All station codes in <code>stations</code> are in <code>phab</code> and the converse</li>
+<li>All required fields in <code>stations</code> and <code>phab</code></li>
+<li>All required PHAB variables are present in the <code>variable</code> field of <code>phab</code> for each station and sample date</li>
+<li>No duplicate results for PHAB variables at each station and sample date</li>
+<li>All input variables for <code>stations</code> and <code>phab</code> are non-negative. The variables <code>XBKF_W</code>, <code>H_Aq_Hab</code>, <code>Ev_FlowHab</code>, and <code>H_SubNat</code> in <code>phab</code> must also be greater than zero.</li>
+</ul>
+<p>The <code>chkinp</code> function can be used independently to check formatting of the input data. The function will return an error if the data are formatted incorrectly.</p>
+<pre class="r"><code>stations$StationCode[1] &lt;- stations$StationCode[2]
+chkinp(stations, phab)</code></pre>
+<pre><code>## Error: remove duplicated stations: 205PS0157</code></pre>
+<pre class="r"><code>data(stations)
+phab &lt;- subset(phab, !phab$Variable %in% &#39;XSLOPE&#39;)
+chkinp(stations, phab)</code></pre>
+<pre><code>## Error: Required PHAB variables not present:
+## 
+## 105PS0107, 9/14/2009:  XSLOPE
+## 205PS0157, 6/19/2012:  XSLOPE
+## 305PS0057, 6/16/2009:  XSLOPE
+## 504PS0147, 6/23/2008:  XSLOPE
+## 632PS0007, 7/23/2008:  XSLOPE
+## 901PS0057, 5/14/2008:  XSLOPE</code></pre>
 </div>
 </div>
 
