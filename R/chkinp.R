@@ -9,7 +9,7 @@
 #' 
 #' @importFrom dplyr filter group_by mutate select
 #' @importFrom magrittr "%>%"
-#' @importFrom tidyr nest
+#' @importFrom tidyr gather nest
 #' @importFrom purrr map
 #' 
 #' @details 
@@ -20,13 +20,14 @@
 #' \item{}{All required fields in \code{\link{stations}} and \code{\link{phab}}}
 #' \item{}{All required PHAB variables are present in the \code{variable} field of \code{\link{phab}} for each station and sample date}
 #' \item{}{No duplicate results for PHAB variables at each station and sample date}
+#' \item{}{All input variables for \code{\link{stations}} and \code{\link{phab}} are non-negative. The variables \code{XBKF_W}, \code{H_Aq_Hab}, \code{Ev_FlowHab}, and \code{H_SubNat} in \code{\link{phab}} must also be greater than zero.}
 #' }
 #' 
 #' @export
 #'
 #' @examples
 #' chkinp(stations, phab)
-chkinp <- function(station, phab){
+chkinp <- function(stations, phab){
   
   ##
   # duplicated stations
@@ -113,6 +114,47 @@ chkinp <- function(station, phab){
     stop('Duplicate PHAB variables are present:\n\n', dupall, call. = FALSE)
     
   }
+  
+  ##
+  # check for negative values in station fields
+  chk <- stations[, stafld] %>%
+    select(-StationCode, -New_Long) %>% 
+    gather('var', 'val') %>% 
+    group_by(var) %>% 
+    filter(val < 0) %>% 
+    .$var %>% 
+    unique
+    
+  if(length(chk) > 0)
+    stop('Negative values for station variables: ', paste(chk, collapse = ', '), .call = FALSE)
+  
+  ##
+  # check for negative values in phab
+  chk <- phab %>% 
+    select(Variable, Result) %>% 
+    unique %>% 
+    filter(Variable %in% phavar) %>% 
+    group_by(Variable) %>% 
+    filter(Result < 0) %>% 
+    .$Variable %>% 
+    unique
+  
+  if(length(chk) > 0)
+    stop('Negative values for phab variables: ', paste(chk, collapse = ', '), .call = FALSE)
+  
+  ##
+  # check for zero values in phab variables XBKF_W, H_Aq_Hab, Ev_FlowHab, and H_SubNat
+  chk <- phab %>% 
+    select(Variable, Result) %>% 
+    unique %>% 
+    filter(Variable %in% c('XBKF_W', 'H_Aq_Hab', 'Ev_FlowHab', 'H_SubNat')) %>% 
+    group_by(Variable) %>% 
+    filter(Result == 0) %>% 
+    .$Variable %>% 
+    unique
+  
+  if(length(chk) > 0)
+    stop('Values for phab variables include zero: ', paste(chk, collapse = ', '), .call = FALSE)
   
   return()
   

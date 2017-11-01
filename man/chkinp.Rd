@@ -4,12 +4,12 @@
 \alias{chkinp}
 \title{Check input data for IPI}
 \usage{
-chkinp(station, phab)
+chkinp(stations, phab)
 }
 \arguments{
-\item{phab}{\code{data.frame} of input physical habitat data}
-
 \item{stations}{\code{data.frame} of input station data}
+
+\item{phab}{\code{data.frame} of input physical habitat data}
 }
 \value{
 An error message is returned if the input data are not correctly formatted. If a dataset has multiple errors, only the first is returned.
@@ -25,6 +25,7 @@ This function checks the following:
 \item{}{All required fields in \code{\link{stations}} and \code{\link{phab}}}
 \item{}{All required PHAB variables are present in the \code{variable} field of \code{\link{phab}} for each station and sample date}
 \item{}{No duplicate results for PHAB variables at each station and sample date}
+\item{}{All input variables for \code{\link{stations}} and \code{\link{phab}} are non-negative. The variables \code{XBKF_W}, \code{H_Aq_Hab}, \code{Ev_FlowHab}, and \code{H_SubNat} in \code{\link{phab}} must also be greater than zero.}
 }
 }
 \examples{
