@@ -1,0 +1,119 @@
+#' Check input data for IPI
+#'
+#' Check input data for IPI
+#' 
+#' @param stations \code{data.frame} of input station data
+#' @param phab \code{data.frame} of input physical habitat data
+#'
+#' @return An error message is returned if the input data are not correctly formatted. If a dataset has multiple errors, only the first is returned.
+#' 
+#' @importFrom dplyr filter group_by mutate select
+#' @importFrom magrittr "%>%"
+#' @importFrom tidyr nest
+#' @importFrom purrr map
+#' 
+#' @details 
+#' This function checks the following:
+#' \describe{
+#' \item{}{No duplicate station rows in \code{\link{stations}}}
+#' \item{}{All stations in \code{\link{stations}} are in \code{\link{phab}} and the converse}
+#' \item{}{All required fields in \code{\link{stations}} and \code{\link{phab}}}
+#' \item{}{All required PHAB variables are present in the \code{variable} field of \code{\link{phab}} for each station and sample date}
+#' \item{}{No duplicate results for PHAB variables at each station and sample date}
+#' }
+#' 
+#' @export
+#'
+#' @examples
+#' chkinp(stations, phab)
+chkinp <- function(station, phab){
+  
+  ##
+  # duplicated stations
+  
+  chk <- duplicated(stations$StationCode)
+  if(any(chk)){
+    dups <- paste(stations$StationCode[chk], collapse = ', ')
+    stop('remove duplicated stations: ', dups, call. = FALSE)
+  }
+  
+  ##
+  # check that stations in stations match stations in phab
+  
+  chk <- setdiff(stations$StationCode, phab$StationCode)
+  if(length(chk) > 0) 
+    stop('station ', paste(chk, collapse = ', '), ' from stations not in phab', call. = FALSE)
+  
+  ##
+  # check that stations in phab match stations in stations
+  
+  chk <- setdiff(phab$StationCode, stations$StationCode)
+  if(length(chk) > 0) 
+    stop('station ', paste(chk, collapse = ', '), ' from phab not in stations', call. = FALSE)
+  
+  ##
+  # check station fields are present
+  
+  stafld <- c('StationCode', 'MAX_ELEV', 'AREA_SQKM', 'ELEV_RANGE', 'MEANP_WS', 'New_Long', 
+              'SITE_ELEV', 'KFCT_AVE', 'New_Lat', 'MINP_WS', 'PPT_00_09')
+  chk <- stafld %in% names(stations)
+  if(any(!chk))
+    stop('Required fields not present in stations: ', paste(stafld[!chk], collapse = ', '), call. = FALSE)
+  
+  ##
+  # check phab fields are present
+  
+  phafld <- c('StationCode', 'SampleDate', 'Variable', 'Result', 'Count_Calc')
+  chk <- phafld %in% names(phab)
+  if(any(!chk))
+    stop('Required fields not present in phab: ', paste(phafld[!chk], collapse = ', '), call. = FALSE)
+
+  ##
+  # check if phab variables present, need to return sample and date with missing vars
+  
+  phavar <- c('XSLOPE', 'XBKF_W', 'H_AqHab', 'PCT_SAFN', 'XCMG', 'Ev_FlowHab', 'H_SubNat', 'XC', 'PCT_POOL', 'XFC_ALG', 'PCT_SA', 'PCT_RC')
+  chk <- phab %>% 
+    select(StationCode, SampleDate, Variable) %>% 
+    unique %>% 
+    group_by(StationCode, SampleDate) %>%
+    nest %>% 
+    mutate(
+      misvar = map(data, ~ phavar[phavar %in% .x$Variable]),
+      misvar = map(misvar, ~ setdiff(phavar, .x))
+    ) %>% 
+    filter(map(misvar, ~ length(.x) > 0) %>% unlist)
+  
+  if(nrow(chk) > 0){
+    
+    stadts <- paste0(chk$StationCode, ', ', chk$SampleDate, ': ') 
+    misvar <- map(chk$misvar, ~ paste(.x, collapse = ', ')) %>% unlist
+    misall <- paste(stadts, misvar) %>% paste(collapse = '\n')
+    stop('Required PHAB variables not present:\n\n', misall, call. = FALSE)
+    
+  }
+  
+  ##
+  # check for duplicate phab variables by station, sample date
+  
+  chk <- phab %>% 
+    select(StationCode, SampleDate, Variable) %>% 
+    unique %>% 
+    group_by(StationCode, SampleDate) %>%
+    nest %>% 
+    mutate(
+      dupvar = map(data, ~ .x$Variable[duplicated(.x$Variable)])
+    ) %>% 
+    filter(map(dupvar, ~ length(.x) > 0) %>% unlist)
+  
+  if(nrow(chk) > 0){
+    
+    stadts <- paste0(chk$StationCode, ', ', chk$SampleDate, ': ') 
+    dupvar <- map(chk$dupvar, ~ paste(.x, collapse = ', ')) %>% unlist
+    dupall <- paste(stadts, dupvar) %>% paste(collapse = '\n\n')
+    stop('Duplicate PHAB variables are present:\n\n', dupall, call. = FALSE)
+    
+  }
+  
+  return()
+  
+}

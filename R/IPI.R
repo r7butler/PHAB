@@ -1,6 +1,6 @@
 #' IPI scores
 #'
-#' IPI scores
+#' Estimate IPI scores for PHAB using station and physical habitat data
 #' 
 #' @param stations \code{data.frame} of input station data
 #' @param phab \code{data.frame} of input physical habitat data
@@ -17,26 +17,14 @@
 #' IPI(stations, phab)
 IPI <- function(stations, phab){
   
-  #LOTS OF CHECKING OF INPUT DATA
-  
-  #Duplicated stations cause problems
-  if( any(duplicated(stations$StationCode))) print(stations$StationCode[duplicated(stations$StationCode)])
-  #Purge duplicated stations? This purges all but the first entry
-  # stations<-stations[!duplicated(stations$StationCode),]
-  
+  ##
+  # sanity checks
+  chkinp(stations, phab)
+ 
   phab$PHAB_SampleID<-paste(phab$StationCode, phab$SampleDate, sep="_")
-  
-  # scoring<-read.csv("phab_scoring.csv", stringsAsFactors = F)
-  # scoring<-scoring[1:5,] #Drop XWD_RAT
   
   # sel.metrics<-scoring$Variable
   sel.metrics<-c("Ev_FlowHab", "H_AqHab", "XCMG", "H_SubNat", "PCT_SAFN")
-  
-  #Should you purge the stations that are missing from one of the two inputs?
-  #Normally, no. The user should fix this. Purging is only for convenience
-  min.sta<-intersect(stations$StationCode, phab$StationCode)
-  phab<-phab[which(phab$StationCode %in% min.sta),]
-  stations<-stations[which(stations$StationCode %in% min.sta),]
   
   #Do you have all the required variables?
   #PHAB

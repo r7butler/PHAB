@@ -15,7 +15,7 @@ IPI(stations, phab)
 results
 }
 \description{
-IPI scores
+Estimate IPI scores for PHAB using station and physical habitat data
 }
 \examples{
 IPI(stations, phab)
