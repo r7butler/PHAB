@@ -12,7 +12,7 @@ Imports:
   randomForest,
   reshape2
 Depends:
-  R (>= 3.4.1)
+  R (>= 3.1.1)
 Authors@R: c(
   person(given = "Marcus W.", family = "Beck",
          role = c("aut","cre"),
