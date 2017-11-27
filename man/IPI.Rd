@@ -4,15 +4,17 @@
 \alias{IPI}
 \title{IPI scores}
 \usage{
-IPI(stations, phab)
+IPI(stations, phab, qa = TRUE)
 }
 \arguments{
 \item{stations}{\code{data.frame} of input station data}
 
 \item{phab}{\code{data.frame} of input physical habitat data}
+
+\item{qa}{logical indicating of quality assurance columns are appended to the output}
 }
 \value{
-results
+A results \code{data.frame} of IPI and metric scores, quality assurance results are returned if \code{qa = TRUE} (default)
 }
 \description{
 Estimate IPI scores for PHAB using station and physical habitat data

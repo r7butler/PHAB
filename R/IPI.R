@@ -4,8 +4,9 @@
 #' 
 #' @param stations \code{data.frame} of input station data
 #' @param phab \code{data.frame} of input physical habitat data
+#' @param qa logical indicating of quality assurance columns are appended to the output
 #'
-#' @return results
+#' @return A results \code{data.frame} of IPI and metric scores, quality assurance results are returned if \code{qa = TRUE} (default)
 #' 
 #' @importFrom reshape2 dcast
 #' @importFrom plyr ddply join summarize
@@ -15,7 +16,7 @@
 #'
 #' @examples
 #' IPI(stations, phab)
-IPI <- function(stations, phab){
+IPI <- function(stations, phab, qa = TRUE){
   
   ##
   # sanity checks
@@ -100,7 +101,6 @@ IPI <- function(stations, phab){
   phab.scores$PCT_SAFN_score[which(phab.scores$PCT_SAFN_score>1)]<-1
   phab.scores$PCT_SAFN_score[which(phab.scores$PCT_SAFN_score<0)]<-0
   
-  
   #XCMG: Modeled, decreaser
   phab.scores$XCMG_pred<-  predict(XCMG, newdata = preds)
   phab.scores$XCMG_score<-  ((phab.scores$XCMG-phab.scores$XCMG_pred) - (-128.5))/(43.6  - (-128.5))
@@ -117,33 +117,35 @@ IPI <- function(stations, phab){
   phab.scores$IPI_raw<-  rowMeans(phab.scores[,c("Ev_FlowHab_score","H_SubNat_score","PCT_SAFN_score","XCMG_score","XCMG_score","H_AqHab_score")])
   phab.scores$IPI<-phab.scores$IPI_raw/0.761
   phab.scores$IPI_percentile<-round(pnorm(q=phab.scores$IPI, mean=1, sd=0.123),2)
+
+  #Combine metrics and qa in a single report, with columns in a better order
+  report<- phab.scores[,c("StationCode","SampleDate","PHAB_SampleID",
+                          "IPI","IPI_percentile",
+                          "Ev_FlowHab","Ev_FlowHab_score",
+                          "H_AqHab","H_AqHab_pred","H_AqHab_score",
+                          "H_SubNat","H_SubNat_score",
+                          "PCT_SAFN","PCT_RC", "PCT_SAFN_pred","PCT_SAFN_score",
+                          "XCMG","XCMG_pred","XCMG_score")]
   
   #Calculate the QA for each metric
-  phab.qa2<-
-    ddply(phab, ~PHAB_SampleID, summarize,
-          Ev_FlowHab_qa=round(mean(Count_Calc[which(Variable=="PCT_POOL")])/10,2),
-          H_AqHab_qa=round(mean(Count_Calc[which(Variable=="XFC_ALG")])/11,2),
-          H_SubNat_qa=round(mean(Count_Calc[which(Variable=="PCT_SA")])/105,2),
-          PCT_SAFN_qa=round(mean(Count_Calc[which(Variable=="PCT_SA")])/105,2),
-          XCMG_qa=round(mean(Count_Calc[which(Variable=="XC")])/22,2)
-          # XWD_RAT_qa=round(mean(Count_Calc[which(Variable=="XWIDTH")])/21,2)
-    )
-  
-  #Report the "worst" qa as the overall qa for the index.
-  phab.qa2$IPI_qa<-apply(phab.qa2[,2:6], 1, min)
-  
-  #Combine metrics and qa in a single report, with columns in a better order
-  report<-
-    phab.scores[,c("StationCode","SampleDate","PHAB_SampleID",
-                   "IPI","IPI_percentile",
-                   "Ev_FlowHab","Ev_FlowHab_score",
-                   "H_AqHab","H_AqHab_pred","H_AqHab_score",
-                   "H_SubNat","H_SubNat_score",
-                   "PCT_SAFN","PCT_RC", "PCT_SAFN_pred","PCT_SAFN_score",
-                   "XCMG","XCMG_pred","XCMG_score")]#,
-  # "XWD_RAT","XWD_RAT_pred","XWD_RAT_score")]
-  
-  report<-suppressMessages(join(report, phab.qa2))
+  if(qa){
+    
+    phab.qa2<-
+      ddply(phab, ~PHAB_SampleID, summarize,
+            Ev_FlowHab_qa=round(mean(Count_Calc[which(Variable=="PCT_POOL")])/10,2),
+            H_AqHab_qa=round(mean(Count_Calc[which(Variable=="XFC_ALG")])/11,2),
+            H_SubNat_qa=round(mean(Count_Calc[which(Variable=="PCT_SA")])/105,2),
+            PCT_SAFN_qa=round(mean(Count_Calc[which(Variable=="PCT_SA")])/105,2),
+            XCMG_qa=round(mean(Count_Calc[which(Variable=="XC")])/22,2)
+            # XWD_RAT_qa=round(mean(Count_Calc[which(Variable=="XWIDTH")])/21,2)
+      )
+    
+    #Report the "worst" qa as the overall qa for the index.
+    phab.qa2$IPI_qa<-apply(phab.qa2[,2:6], 1, min)
+    
+    report<-suppressMessages(join(report, phab.qa2))
+    
+  }
   
   return(report)
 
