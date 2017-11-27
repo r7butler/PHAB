@@ -114,6 +114,8 @@ IPI <- function(stations, phab, qa = TRUE){
     #Report the "worst" qa as the overall qa for the index.
     phab.qa2$IPI_qa<-apply(phab.qa2[,2:6], 1, min)
     
+    # arrange columns, add to output
+    phab.qa2 <- phab.qa2[, c('PHAB_SampleID', 'IPI_qa', 'Ev_FlowHab_qa', 'H_AqHab_qa', 'H_SubNat_qa', 'PCT_SAFN_qa', 'XCMG_qa')]
     report<-suppressMessages(join(report, phab.qa2))
     
   }
