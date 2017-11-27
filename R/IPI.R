@@ -30,7 +30,7 @@ IPI <- function(stations, phab, qa = TRUE){
   # subset phab by required metrics
   all.req.phab<-c("XSLOPE","XBKF_W", "H_AqHab","PCT_SAFN","XCMG","Ev_FlowHab","H_SubNat","XC",
                   "PCT_POOL","XFC_ALG","PCT_SA","PCT_RC")
-  phab<-phab[which(phab$Variable %in% all.req.phab),c("StationCode","SampleDate","PHAB_SampleID", "Variable","Result","Count_Calc")]
+  phab<-phab[which(phab$Variable %in% all.req.phab),c("ProjectName", "StationCode","SampleDate","PHAB_SampleID", "Variable","Result","Count_Calc")]
   
   # What are the required predictors?
   preds.req<-unique(c(row.names(H_AqHab$importance),row.names(XCMG$importance),row.names(PCT_SAFN$importance)))
@@ -39,15 +39,14 @@ IPI <- function(stations, phab, qa = TRUE){
   
   # Field predictors
   phab.preds<-phab[which(phab$Variable %in% field.preds.req),]
-  phab.preds<-dcast(phab.preds, StationCode+SampleDate+PHAB_SampleID~Variable, value.var = "Result")
-  sum(is.na(as.matrix(phab.preds[,field.preds.req])))
+  phab.preds<-dcast(phab.preds, ProjectName+StationCode+SampleDate+PHAB_SampleID~Variable, value.var = "Result")
   
   ##########
   #Assemble predictor matrix
-  preds<-merge(phab.preds, unique(stations[c("StationCode",gis.preds.req)]))
+  preds<-merge(phab.preds, unique(stations[c("ProjectName", "StationCode",gis.preds.req)]))
 
   #Assemble phab output
-  phab.scores<-dcast(phab[which(phab$Variable %in% c(sel.metrics,"PCT_RC")),],StationCode+SampleDate+PHAB_SampleID~Variable, value.var = "Result")
+  phab.scores<-dcast(phab[which(phab$Variable %in% c(sel.metrics,"PCT_RC")),],ProjectName+StationCode+SampleDate+PHAB_SampleID~Variable, value.var = "Result")
   
   #Ev_FlowHab: Unmodeled decreaser
   phab.scores$Ev_FlowHab_pred<-NA
@@ -91,7 +90,7 @@ IPI <- function(stations, phab, qa = TRUE){
   phab.scores$IPI_percentile<-round(pnorm(q=phab.scores$IPI, mean=1, sd=0.123),2)
 
   #Combine metrics and qa in a single report, with columns in a better order
-  report<- phab.scores[,c("StationCode","SampleDate","PHAB_SampleID",
+  report<- phab.scores[,c("ProjectName", "StationCode","SampleDate","PHAB_SampleID",
                           "IPI","IPI_percentile",
                           "Ev_FlowHab","Ev_FlowHab_score",
                           "H_AqHab","H_AqHab_pred","H_AqHab_score",

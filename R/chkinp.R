@@ -56,7 +56,7 @@ chkinp <- function(stations, phab, qa = TRUE){
   ##
   # check station fields are present
   
-  stafld <- c('StationCode', 'MAX_ELEV', 'AREA_SQKM', 'ELEV_RANGE', 'MEANP_WS', 'New_Long', 
+  stafld <- c('ProjectName', 'StationCode', 'MAX_ELEV', 'AREA_SQKM', 'ELEV_RANGE', 'MEANP_WS', 'New_Long', 
               'SITE_ELEV', 'KFCT_AVE', 'New_Lat', 'MINP_WS', 'PPT_00_09')
   chk <- stafld %in% names(stations)
   if(any(!chk))
@@ -65,7 +65,7 @@ chkinp <- function(stations, phab, qa = TRUE){
   ##
   # check phab fields are present
   
-  phafld <- c('StationCode', 'SampleDate', 'Variable', 'Result', 'Count_Calc')
+  phafld <- c('ProjectName', 'StationCode', 'SampleDate', 'Variable', 'Result', 'Count_Calc')
   chk <- phafld %in% names(phab)
   if(any(!chk))
     stop('Required fields not present in phab: ', paste(phafld[!chk], collapse = ', '), call. = FALSE)
@@ -119,7 +119,7 @@ chkinp <- function(stations, phab, qa = TRUE){
   ##
   # check for negative values in station fields
   chk <- stations[, stafld] %>%
-    select(-StationCode, -New_Long) %>% 
+    select(-ProjectName, -StationCode, -New_Long) %>% 
     gather('var', 'val') %>% 
     group_by(var) %>% 
     filter(val < 0) %>% 
