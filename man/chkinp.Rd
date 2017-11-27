@@ -4,12 +4,14 @@
 \alias{chkinp}
 \title{Check input data for IPI}
 \usage{
-chkinp(stations, phab)
+chkinp(stations, phab, qa = TRUE)
 }
 \arguments{
 \item{stations}{\code{data.frame} of input station data}
 
 \item{phab}{\code{data.frame} of input physical habitat data}
+
+\item{qa}{logical value passed from \code{\link{IPI}} to suppress error checks on relevant metrics}
 }
 \value{
 An error message is returned if the input data are not correctly formatted. If a dataset has multiple errors, only the first is returned.

@@ -4,7 +4,8 @@
 #' 
 #' @param stations \code{data.frame} of input station data
 #' @param phab \code{data.frame} of input physical habitat data
-#'
+#' @param qa logical value passed from \code{\link{IPI}} to suppress error checks on relevant metrics
+#' 
 #' @return An error message is returned if the input data are not correctly formatted. If a dataset has multiple errors, only the first is returned.
 #' 
 #' @importFrom dplyr filter group_by mutate select
@@ -27,7 +28,7 @@
 #'
 #' @examples
 #' chkinp(stations, phab)
-chkinp <- function(stations, phab){
+chkinp <- function(stations, phab, qa = TRUE){
   
   ##
   # duplicated stations
@@ -130,10 +131,15 @@ chkinp <- function(stations, phab){
   
   ##
   # check for negative values in phab
+  
+  # use full phab variables if t, otherwise remove some
+  if(qa) selphab <- phavar
+  else selphab <- phavar[!phavar %in% c('PCT_POOL', 'PCT_SA', 'XC', 'XFC_ALG')]
+    
   chk <- phab %>% 
     select(Variable, Result) %>% 
     unique %>% 
-    filter(Variable %in% phavar) %>% 
+    filter(Variable %in% selphab) %>% 
     group_by(Variable) %>% 
     filter(Result < 0) %>% 
     .$Variable %>% 
