@@ -8,8 +8,12 @@
 #'
 #' @return A results \code{data.frame} of IPI and metric scores, quality assurance results are returned if \code{qa = TRUE} (default)
 #' 
-#' @importFrom reshape2 dcast
+#' @importFrom dplyr mutate
+#' @importFrom magrittr "%>%"
 #' @importFrom plyr ddply join summarize
+#' @importFrom reshape2 dcast
+#' @importFrom tidyr gather spread
+#'
 #' @import randomForest
 #' 
 #' @export
@@ -88,6 +92,12 @@ IPI <- function(stations, phab, qa = TRUE){
   phab.scores$IPI_raw<-  rowMeans(phab.scores[,c("Ev_FlowHab_score","H_SubNat_score","PCT_SAFN_score","XCMG_score","XCMG_score","H_AqHab_score")])
   phab.scores$IPI<-phab.scores$IPI_raw/0.761
   phab.scores$IPI_percentile<-round(pnorm(q=phab.scores$IPI, mean=1, sd=0.123),2)
+  
+  # round results to two decimals
+  phab.scores <- phab.scores %>% 
+    gather('var', 'val', -ProjectName, -StationCode, -SampleDate, -PHAB_SampleID) %>% 
+    mutate(val = round(val, 2)) %>% 
+    spread(var, val)
 
   #Combine metrics and qa in a single report, with columns in a better order
   report<- phab.scores[,c("ProjectName", "StationCode","SampleDate","PHAB_SampleID",
@@ -119,7 +129,7 @@ IPI <- function(stations, phab, qa = TRUE){
     report<-suppressMessages(join(report, phab.qa2))
     
   }
-  
+
   return(report)
 
 }
