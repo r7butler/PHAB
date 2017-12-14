@@ -5,6 +5,7 @@
 #' @param stations \code{data.frame} of input station data
 #' @param phab \code{data.frame} of input physical habitat data
 #' @param qa logical value passed from \code{\link{IPI}} to suppress error checks on relevant metrics
+#' @param allerr logical indicating if all errors are returned or the first encountered
 #' 
 #' @return An error message is returned if the input data are not correctly formatted. If a dataset has multiple errors, only the first is returned.
 #' 
@@ -28,30 +29,52 @@
 #'
 #' @examples
 #' chkinp(stations, phab)
-chkinp <- function(stations, phab, qa = TRUE){
+chkinp <- function(stations, phab, qa = TRUE, allerr = TRUE){
+
+  errs <- list()
   
   ##
   # duplicated stations
   
   chk <- duplicated(stations$StationCode)
   if(any(chk)){
+    
     dups <- paste(stations$StationCode[chk], collapse = ', ')
-    stop('remove duplicated stations: ', dups, call. = FALSE)
+    msg <- paste0('remove duplicated stations: ', dups)
+    errs <- c(errs, msg)
+    
+    if(!allerr)
+      stop(msg, call. = FALSE)
+    
   }
   
   ##
   # check that stations in stations match stations in phab
   
   chk <- setdiff(stations$StationCode, phab$StationCode)
-  if(length(chk) > 0) 
-    stop('station ', paste(chk, collapse = ', '), ' from stations not in phab', call. = FALSE)
+  if(length(chk) > 0){
+    
+    msg <- paste0('station ', paste(chk, collapse = ', '), ' from stations not in phab')
+    errs <- c(errs, msg)
+    
+    if(!allerr)
+      stop(msg, call. = FALSE)
+  
+  }
   
   ##
   # check that stations in phab match stations in stations
   
   chk <- setdiff(phab$StationCode, stations$StationCode)
-  if(length(chk) > 0) 
-    stop('station ', paste(chk, collapse = ', '), ' from phab not in stations', call. = FALSE)
+  if(length(chk) > 0){ 
+    
+    msg <- paste0('station ', paste(chk, collapse = ', '), ' from phab not in stations')
+    errs <- c(errs, msg)
+    
+    if(!allerr)
+      stop(msg, call. = FALSE)
+    
+  }
   
   ##
   # check station fields are present
@@ -59,16 +82,30 @@ chkinp <- function(stations, phab, qa = TRUE){
   stafld <- c('ProjectName', 'StationCode', 'MAX_ELEV', 'AREA_SQKM', 'ELEV_RANGE', 'MEANP_WS', 'New_Long', 
               'SITE_ELEV', 'KFCT_AVE', 'New_Lat', 'MINP_WS', 'PPT_00_09')
   chk <- stafld %in% names(stations)
-  if(any(!chk))
-    stop('Required fields not present in stations: ', paste(stafld[!chk], collapse = ', '), call. = FALSE)
+  if(any(!chk)){
+    
+    msg <- paste0('Required fields not present in stations: ', paste(stafld[!chk], collapse = ', '))
+    errs <- c(errs, msg)
+    
+    if(!allerr)
+      stop(msg, call. = FALSE)
+    
+  }
   
   ##
   # check phab fields are present
   
   phafld <- c('ProjectName', 'StationCode', 'SampleDate', 'Variable', 'Result', 'Count_Calc')
   chk <- phafld %in% names(phab)
-  if(any(!chk))
-    stop('Required fields not present in phab: ', paste(phafld[!chk], collapse = ', '), call. = FALSE)
+  if(any(!chk)){
+    
+    msg <- paste0('Required fields not present in phab: ', paste(phafld[!chk], collapse = ', '))
+    errs <- c(errs, msg)
+    
+    if(!allerr)
+      stop(msg, call. = FALSE)
+    
+  }
 
   ##
   # check if phab variables present, need to return sample and date with missing vars
@@ -90,7 +127,12 @@ chkinp <- function(stations, phab, qa = TRUE){
     stadts <- paste0(chk$StationCode, ', ', chk$SampleDate, ': ') 
     misvar <- map(chk$misvar, ~ paste(.x, collapse = ', ')) %>% unlist
     misall <- paste(stadts, misvar) %>% paste(collapse = '\n')
-    stop('Required PHAB variables not present:\n\n', misall, call. = FALSE)
+    
+    msg <- paste0('Required PHAB variables not present:\n\n', misall)
+    errs <- c(errs, msg)
+    
+    if(!allerr)
+      stop(msg, call. = FALSE)
     
   }
   
@@ -112,8 +154,13 @@ chkinp <- function(stations, phab, qa = TRUE){
     stadts <- paste0(chk$StationCode, ', ', chk$SampleDate, ': ') 
     dupvar <- map(chk$dupvar, ~ paste(.x, collapse = ', ')) %>% unlist
     dupall <- paste(stadts, dupvar) %>% paste(collapse = '\n\n')
-    stop('Duplicate PHAB variables are present:\n\n', dupall, call. = FALSE)
+
+    msg <- paste0('Duplicate PHAB variables are present:\n\n', dupall)
+    errs <- c(errs, msg)
     
+    if(!allerr)
+      stop(msg, call. = FALSE)
+
   }
   
   ##
@@ -126,8 +173,15 @@ chkinp <- function(stations, phab, qa = TRUE){
     .$var %>% 
     unique
     
-  if(length(chk) > 0)
-    stop('Negative values for station variables: ', paste(chk, collapse = ', '), .call = FALSE)
+  if(length(chk) > 0){
+  
+    msg <- paste0('Negative values for station variables: ', paste(chk, collapse = ', '))
+    errs <- c(errs, msg)
+    
+    if(!allerr)
+      stop(msg, call. = FALSE)
+    
+  }
   
   ##
   # check for negative values in phab
@@ -145,8 +199,15 @@ chkinp <- function(stations, phab, qa = TRUE){
     .$Variable %>% 
     unique
   
-  if(length(chk) > 0)
-    stop('Negative values for phab variables: ', paste(chk, collapse = ', '), .call = FALSE)
+  if(length(chk) > 0){
+    
+    msg <- paste0('Negative values for phab variables: ', paste(chk, collapse = ', '))
+    errs <- c(errs, msg)
+    
+    if(!allerr)
+      stop(msg, call. = FALSE)
+    
+  }
   
   ##
   # check for zero values in phab variables XBKF_W, H_Aq_Hab, Ev_FlowHab, and H_SubNat
@@ -159,8 +220,25 @@ chkinp <- function(stations, phab, qa = TRUE){
     .$Variable %>% 
     unique
   
-  if(length(chk) > 0)
-    stop('Values for phab variables include zero: ', paste(chk, collapse = ', '), .call = FALSE)
+  if(length(chk) > 0){
+    
+    msg <- paste0('Values for phab variables include zero: ', paste(chk, collapse = ', '))
+    errs <- c(errs, msg)
+    
+    if(!allerr)
+      stop(msg, call. = FALSE)
+    
+  }
+
+  # format errors and stop if any
+  if(length(errs) > 0){
+    
+    errs <- do.call('c', errs) %>% 
+      paste(collapse = '\n\n') %>% 
+      paste0('\n\n', .)
+    stop(errs, call. = FALSE)
+    
+  }
   
   return()
   

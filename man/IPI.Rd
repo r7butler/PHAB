@@ -4,7 +4,7 @@
 \alias{IPI}
 \title{IPI scores}
 \usage{
-IPI(stations, phab, qa = TRUE)
+IPI(stations, phab, qa = TRUE, allerr = TRUE)
 }
 \arguments{
 \item{stations}{\code{data.frame} of input station data}
@@ -12,6 +12,8 @@ IPI(stations, phab, qa = TRUE)
 \item{phab}{\code{data.frame} of input physical habitat data}
 
 \item{qa}{logical indicating of quality assurance columns are appended to the output}
+
+\item{allerr}{logical indicating if all errors are returned or the first encountered}
 }
 \value{
 A results \code{data.frame} of IPI and metric scores, quality assurance results are returned if \code{qa = TRUE} (default)

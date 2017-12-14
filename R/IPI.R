@@ -5,7 +5,8 @@
 #' @param stations \code{data.frame} of input station data
 #' @param phab \code{data.frame} of input physical habitat data
 #' @param qa logical indicating of quality assurance columns are appended to the output
-#'
+#' @param allerr logical indicating if all errors are returned or the first encountered
+#' 
 #' @return A results \code{data.frame} of IPI and metric scores, quality assurance results are returned if \code{qa = TRUE} (default)
 #' 
 #' @importFrom dplyr mutate
@@ -20,10 +21,10 @@
 #'
 #' @examples
 #' IPI(stations, phab)
-IPI <- function(stations, phab, qa = TRUE){
+IPI <- function(stations, phab, qa = TRUE, allerr = TRUE){
   
   # sanity checks
-  chkinp(stations, phab, qa = qa)
+  chkinp(stations, phab, qa = qa, allerr = allerr)
  
   # append unique SampleID
   phab$PHAB_SampleID<-paste(phab$StationCode, phab$SampleDate, sep="_")
