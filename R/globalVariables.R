@@ -1,5 +1,5 @@
 globalVariables(c('H_AqHab', 'XCMG', 'PCT_SAFN', 'Count_Calc', 'Variable', 'stations', 
-                  'StationCode', 'SampleDate', 'data', 'ProjectName', 'PHAB_SampleID', 'val', 
+                  'StationCode', 'SampleDate', 'data', 'PHAB_SampleID', 'val', 
                   'var', 'New_Long', '.', 'Result'))
 
 #' @importFrom stats pnorm predict

@@ -1,7 +1,7 @@
 Package: PHAB
 Type: Package
 Title: Calculate scores for PHAB
-Version: 0.0.1.9003
+Version: 0.0.1.9004
 Date: 2017-12-15
 Description: Calculate scores for the Physical Habitat (PHAB) index.
 BugReports: https://github.com/SCCWRP/PHAB/issues

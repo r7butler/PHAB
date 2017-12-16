@@ -79,7 +79,7 @@ chkinp <- function(stations, phab, qa = TRUE, allerr = TRUE){
   ##
   # check station fields are present
   
-  stafld <- c('ProjectName', 'StationCode', 'MAX_ELEV', 'AREA_SQKM', 'ELEV_RANGE', 'MEANP_WS', 'New_Long', 
+  stafld <- c('StationCode', 'MAX_ELEV', 'AREA_SQKM', 'ELEV_RANGE', 'MEANP_WS', 'New_Long', 
               'SITE_ELEV', 'KFCT_AVE', 'New_Lat', 'MINP_WS', 'PPT_00_09')
   chk <- stafld %in% names(stations)
   if(any(!chk)){
@@ -96,7 +96,7 @@ chkinp <- function(stations, phab, qa = TRUE, allerr = TRUE){
   
   # check phab fields are present
   
-  phafld <- c('ProjectName', 'StationCode', 'SampleDate', 'Variable', 'Result', 'Count_Calc')
+  phafld <- c('StationCode', 'SampleDate', 'Variable', 'Result', 'Count_Calc')
   chk <- phafld %in% names(phab)
   if(any(!chk)){
     
