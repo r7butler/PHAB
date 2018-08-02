@@ -5,7 +5,7 @@ output:
     toc: no
     self_contained: no
 ---
-## PHAB
+# PHAB
 
 #### *Marcus W. Beck, marcusb@sccwrp.org, Raphael Mazor, raphaelm@sccwrp.org*
 
@@ -13,9 +13,11 @@ output:
 [![Travis-CI Build Status](https://travis-ci.org/SCCWRP/PHAB.svg?branch=master)](https://travis-ci.org/SCCWRP/PHAB)
 [![DOI](https://zenodo.org/badge/108920024.svg)](https://zenodo.org/badge/latestdoi/108920024)
 
-This package contains materials to calculate scores of physical habitat integrity, or PHAB, for California streams. 
+The PHAB package contains materials to calculate scores of physical habitat integrity for California streams. 
 
-### Installation
+This tutorial assumes that the user is familiar with basic operations in the R programming language, such as data import, export, and manipulation. Although not required, we recommend using an integrated development environemnt for R, such as R-studio, which can be downloaded at [http://www.rstudio.com](http://www.rstudio.com). New users are encouraged to pursue training opportunities, such as those hosted by local R user groups. A list of such groups may be found here: http://blog.revolutionanalytics.com/local-r-groups.html. R training material developed by SCCWRP can also be found online: [https://sccwrp.github.io/SCCWRP_R_training/](https://sccwrp.github.io/SCCWRP_R_training/)
+
+## Installation and basic usage
 
 Install the package as follows:
 
@@ -26,8 +28,6 @@ install_github('SCCWRP/PHAB')
 library(PHAB)
 ```
 
-### Usage
-
 The core function is `IPI` that requires station and phab data as input.
 
 ```{r, echo = F, message = F, warning = F}
@@ -36,6 +36,41 @@ devtools::load_all()
 ```{r}
 IPI(stations, phab)
 ```
+
+# Detailed usage
+
+The PHAB package can be installed from the R console with just a few lines of code.  The current version of the package can be found on SCCWRP's GitHub page [here](https://github.com/SCCWRP/PHAB) and can be installed using the devtools package.  The devtools package must be installed first before the PHAB package can be installed.  Start by installing and loading devtools:
+
+```{r eval = F}
+install.packages('devtools')
+library(devtools)
+```
+
+Now the `install_github()` function can be used to install PHAB from GitHub.  The package can be loaded after it's installed.
+
+```{r eval = F}
+install_github('SCCWRP/PHAB')
+library(PHAB)
+```
+
+The installation process may take a few seconds.  Both the devtools and PHAB packages depend on other R packages, all of which are installed together.  If an error is encountered during installation, an informative message is usually printed in the R console.  This information can help troubleshoot the problem.  Please contact SCCWRP staff if additional errors are encountered. 
+
+After the package is successfully installed, you should be able to view the help file for the PHAB core function:
+```{r, eval = F}
+?IPI
+```
+
+## Preparing the input data
+
+The `IPI()` function is used to calculate PHAB scores using both station and PHAB metric data as input.  The input data must follow a particular format and sample data are provided with the PHAB package as a demonstration.  These data are loaded automatically once the package is installed and loaded.  You can view the `stations` and `phab` input data from the R console:
+
+```{r}
+head(stations)
+head(phab)
+```
+
+
+## Error checks for input data
 
 Error checks are used to verify correct formatting of the input data.  The following checks are made:
 
