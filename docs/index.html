@@ -60,28 +60,25 @@
 
     
     
-<div id="phab" class="section level2">
-<h2 class="hasAnchor">
-<a href="#phab" class="anchor"></a>PHAB</h2>
+<div id="phab" class="section level1">
+<div class="page-header"><h1 class="hasAnchor">
+<a href="#phab" class="anchor"></a>PHAB</h1></div>
 <div id="marcus-w--beck-marcusbsccwrp-org-raphael-mazor-raphaelmsccwrp-org" class="section level4">
 <h4 class="hasAnchor">
 <a href="#marcus-w--beck-marcusbsccwrp-org-raphael-mazor-raphaelmsccwrp-org" class="anchor"></a><em>Marcus W. Beck, <a href="mailto:marcusb@sccwrp.org">marcusb@sccwrp.org</a>, Raphael Mazor, <a href="mailto:raphaelm@sccwrp.org">raphaelm@sccwrp.org</a></em>
 </h4>
 
-<p>This package contains materials to calculate scores of physical habitat integrity, or PHAB, for California streams.</p>
+<p>The PHAB package contains materials to calculate an index of physical integrity (IPI) for California streams. This index is estimated using site-specific data and available metrics of physical habitat to describe overall integrity.</p>
+<p>This tutorial assumes that the user is familiar with basic operations in the R programming language, such as data import, export, and manipulation. Although not required, we recommend using an integrated development environment for R, such as R-studio, which can be downloaded at <a href="http://www.rstudio.com" class="uri">http://www.rstudio.com</a>. New users are encouraged to pursue training opportunities, such as those hosted by local R user groups. A list of such groups may be found here: <a href="http://blog.revolutionanalytics.com/local-r-groups.html" class="uri">http://blog.revolutionanalytics.com/local-r-groups.html</a>. R training material developed by SCCWRP can also be found online: <a href="https://sccwrp.github.io/SCCWRP_R_training/" class="uri">https://sccwrp.github.io/SCCWRP_R_training/</a></p>
 </div>
-<div id="installation" class="section level3">
-<h3 class="hasAnchor">
-<a href="#installation" class="anchor"></a>Installation</h3>
+<div id="installation-and-basic-usage" class="section level2">
+<h2 class="hasAnchor">
+<a href="#installation-and-basic-usage" class="anchor"></a>Installation and basic usage</h2>
 <p>Install the package as follows:</p>
 <div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb1-1" data-line-number="1"><span class="kw">install.packages</span>(<span class="st">'devtools'</span>)</a>
 <a class="sourceLine" id="cb1-2" data-line-number="2"><span class="kw">library</span>(devtools)</a>
 <a class="sourceLine" id="cb1-3" data-line-number="3"><span class="kw">install_github</span>(<span class="st">'SCCWRP/PHAB'</span>)</a>
 <a class="sourceLine" id="cb1-4" data-line-number="4"><span class="kw">library</span>(PHAB)</a></code></pre></div>
-</div>
-<div id="usage" class="section level3">
-<h3 class="hasAnchor">
-<a href="#usage" class="anchor"></a>Usage</h3>
 <p>The core function is <code>IPI</code> that requires station and phab data as input.</p>
 <div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb2-1" data-line-number="1"><span class="kw"><a href="reference/IPI.html">IPI</a></span>(stations, phab)</a></code></pre></div>
 <pre><code>##   StationCode SampleDate       PHAB_SampleID  IPI IPI_percentile
@@ -119,38 +116,143 @@
 ## 4           1    1.00
 ## 5           1    1.00
 ## 6           1    0.95</code></pre>
-<p>Error checks are used to verify correct formatting of the input data. The following checks are made:</p>
+</div>
+</div>
+<div id="detailed-usage" class="section level1">
+<h1 class="hasAnchor">
+<a href="#detailed-usage" class="anchor"></a>Detailed usage</h1>
+<p>The PHAB package can be installed from the R console with just a few lines of code. The current version of the package can be found on SCCWRP’s GitHub page <a href="https://github.com/SCCWRP/PHAB">here</a> and can be installed using the devtools package. The devtools package must be installed first before the PHAB package can be installed. Start by installing and loading devtools:</p>
+<div class="sourceCode" id="cb4"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb4-1" data-line-number="1"><span class="kw">install.packages</span>(<span class="st">'devtools'</span>)</a>
+<a class="sourceLine" id="cb4-2" data-line-number="2"><span class="kw">library</span>(devtools)</a></code></pre></div>
+<p>Now the <code>install_github()</code> function from devtools can be used to install PHAB from GitHub. The package can be loaded after installation.</p>
+<div class="sourceCode" id="cb5"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb5-1" data-line-number="1"><span class="kw">install_github</span>(<span class="st">'SCCWRP/PHAB'</span>)</a>
+<a class="sourceLine" id="cb5-2" data-line-number="2"><span class="kw">library</span>(PHAB)</a></code></pre></div>
+<p>The installation process may take a few seconds. Both the devtools and PHAB packages depend on other R packages, all of which are installed together. If an error is encountered during installation, an informative message is usually printed in the R console. This information can help troubleshoot the problem, such as identifying which dependent packages may need to be installed separately by the user. Please contact SCCWRP staff if additional errors are encountered.</p>
+<p>After the package is successfully installed, you will be able to view the help file for the PHAB core function:</p>
+<div class="sourceCode" id="cb6"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb6-1" data-line-number="1">?IPI</a></code></pre></div>
+<div id="preparing-the-input-data" class="section level2">
+<h2 class="hasAnchor">
+<a href="#preparing-the-input-data" class="anchor"></a>Preparing the input data</h2>
+<p>The <code><a href="reference/IPI.html">IPI()</a></code> function is used to calculate PHAB scores using both station and PHAB metric data as input. The input data must be correctly formatted and sample data are provided with the PHAB package to demonstrate this format. These data are loaded automatically once the package is installed and loaded. You can view the <code>stations</code> and <code>phab</code> example data from the R console:</p>
+<div class="sourceCode" id="cb7"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb7-1" data-line-number="1"><span class="kw">head</span>(stations)</a></code></pre></div>
+<pre><code>##   StationCode MAX_ELEV  AREA_SQKM ELEV_RANGE MEANP_WS  New_Long SITE_ELEV
+## 1   105PS0107     2587 2002.90397    2050.96 882.4179 -123.0173    536.04
+## 2   205PS0157     1111  600.95071    1074.00 604.9312 -121.8352     37.00
+## 3   305PS0057     1152 1261.70747    1107.36 544.3272 -121.5114     44.64
+## 4   504PS0147     2144 1954.62572    2059.52 781.2332 -122.2178     84.48
+## 5   632PS0007     3348   98.66497    1240.06 962.0929 -119.5937   2107.94
+## 6   901PS0057     1734   92.31964    1671.43 495.7878 -117.6696     62.57
+##    KFCT_AVE  New_Lat MINP_WS PPT_00_09
+## 1 0.1776000 41.71375 10.9294   54996.9
+## 2 0.2927333 37.30141  0.7059   40023.9
+## 3 0.2840000 36.95052  0.6623   42432.2
+## 4 0.2181000 39.77572  2.7024   53740.0
+## 5 0.1217000 38.53335 17.9569   67846.9
+## 6 0.2854000 33.52814  0.5268   29440.0</code></pre>
+<div class="sourceCode" id="cb9"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb9-1" data-line-number="1"><span class="kw">head</span>(phab)</a></code></pre></div>
+<pre><code>##   StationCode SampleDate      Variable Result Count_Calc
+## 1   105PS0107  9/14/2009  W1_HALL_EMAP   0.00         11
+## 2   105PS0107  9/14/2009 W1_HALL_SWAMP   0.00         14
+## 3   105PS0107  9/14/2009      PCT_CPOM  24.00        105
+## 4   105PS0107  9/14/2009      Ev_AqHab   0.77          8
+## 5   105PS0107  9/14/2009    Ev_FlowHab   0.85          4
+## 6   105PS0107  9/14/2009     Ev_SubNat   0.75          8</code></pre>
+<p>The <code>stations</code> data includes site-specific information that are derived from geospatial analysis. These data are in wide format where one row corresponds to data for one site. The following fields are required:</p>
+<ul>
+<li>
+<code>StationCode</code> character string for the unique station identifier</li>
+<li>
+<code>MAX_ELEV</code> numeric for maximum elevation in the watershed in meters</li>
+<li>
+<code>AREA_SQKM</code> numeric for watershed area in square kilometers</li>
+<li>
+<code>MEANP_WS</code> numeric for mean phosphorus geology from the watershed</li>
+<li>
+<code>New_Long</code> numeric for site longitude, decimal degrees</li>
+<li>
+<code>SITE_ELEV</code> numeric for site elevation</li>
+<li>
+<code>KFCT_AVE</code> numeric for average soil erodibility factor</li>
+<li>
+<code>New_Lat</code> numeric for site latitude, decimal degrees</li>
+<li>
+<code>MINP_WS</code> numeric for minimum phosphorus geology from the watershed</li>
+<li>
+<code>PPT_00_09</code> numeric for average precipitation (2000 to 2009) at the sample point, in hundredths of millimeters</li>
+</ul>
+<p>The <code>phab</code> data include estimated physical habitat metrics that are compiled along with the station data to get the IPI score. These data are in long format where multiple rows correspond to physical habitat metric values for a single site. The following fields are required:</p>
+<ul>
+<li>
+<code>StationCode</code> character string for the unique station identifier</li>
+<li>
+<code>SampleDate</code> character string indicating date of the sample</li>
+<li>
+<code>Variable</code> character string indicating the name of the PHAB metric</li>
+<li>
+<code>Result</code> numeric for the resulting metric value</li>
+<li>
+<code>Count_Calc</code> numeric for number of unique observations that were used to estimate the value in <code>Result</code>
+</li>
+</ul>
+<p>All required fields for the <code>stations</code> and <code>phab</code> data are case-sensitive and must be spelled correctly. The order of the fields does not matter. All <code>StationCode</code> values must be shared between the datasets. As described below, the <code><a href="reference/IPI.html">IPI()</a></code> function checks the format of the input data prior to estimating scores.</p>
+</div>
+<div id="using-the-ipi-function" class="section level2">
+<h2 class="hasAnchor">
+<a href="#using-the-ipi-function" class="anchor"></a>Using the IPI function</h2>
+<p>The <code><a href="reference/IPI.html">IPI()</a></code> function can be used on station and PHAB data that are correctly formatted as shown above.</p>
+<div class="sourceCode" id="cb11"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb11-1" data-line-number="1"><span class="kw"><a href="reference/IPI.html">IPI</a></span>(stations, phab)</a></code></pre></div>
+<pre><code>##   StationCode SampleDate       PHAB_SampleID  IPI IPI_percentile
+## 1   105PS0107  9/14/2009 105PS0107_9/14/2009 1.16           0.90
+## 2   205PS0157  6/19/2012 205PS0157_6/19/2012 1.04           0.62
+## 3   305PS0057  6/16/2009 305PS0057_6/16/2009 0.79           0.04
+## 4   504PS0147  6/23/2008 504PS0147_6/23/2008 0.78           0.03
+## 5   632PS0007  7/23/2008 632PS0007_7/23/2008 1.10           0.79
+## 6   901PS0057  5/14/2008 901PS0057_5/14/2008 1.08           0.74
+##   Ev_FlowHab Ev_FlowHab_score H_AqHab H_AqHab_pred H_AqHab_score H_SubNat
+## 1       0.85             0.89    1.59         1.11          1.00     1.57
+## 2       0.96             1.00    1.42         1.35          0.80     1.41
+## 3       0.50             0.51    1.32         1.42          0.70     0.49
+## 4       0.28             0.28    1.24         1.30          0.72     0.98
+## 5       0.90             0.95    1.51         1.41          0.82     1.80
+## 6       0.70             0.73    1.52         1.38          0.84     1.80
+##   H_SubNat_score PCT_SAFN PCT_RC PCT_SAFN_pred PCT_SAFN_score XCMG
+## 1           0.83        6      0         24.60           1.00   99
+## 2           0.74       51      2         22.06           0.40  131
+## 3           0.26       83      0         29.51           0.12  152
+## 4           0.52        1      0         34.38           1.00   55
+## 5           0.95       14      0         13.49           0.79  126
+## 6           0.95       40      3         34.46           0.69  122
+##   XCMG_pred XCMG_score IPI_qa Ev_FlowHab_qa H_AqHab_qa H_SubNat_qa
+## 1     93.64       0.78   1.00             1          1           1
+## 2    104.72       0.90   1.00             1          1           1
+## 3    106.05       1.00   1.00             1          1           1
+## 4     95.41       0.51   1.00             1          1           1
+## 5    123.10       0.76   1.00             1          1           1
+## 6    102.16       0.86   0.95             1          1           1
+##   PCT_SAFN_qa XCMG_qa
+## 1           1    1.00
+## 2           1    1.00
+## 3           1    1.00
+## 4           1    1.00
+## 5           1    1.00
+## 6           1    0.95</code></pre>
+<p>This function will return a data frame of IPI scores estimated at each site on each unique sample date. The output data are in wide format with one row for each sample date at a site. The final IPI score and the percentile estimate of the score are in the <code>IPI</code> and <code>IPI_percentile</code> columns, respectively. The corresponding observed PHAB metrics, predicted metrics, and metric scores are included in the columns that follow. Finaly, the last five columns include quality assurance scores for select metrics. These final columns are included by default and can be removed from the output by using the <code>qa = FALSE</code> argument.</p>
+<div class="sourceCode" id="cb13"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb13-1" data-line-number="1"><span class="kw"><a href="reference/IPI.html">IPI</a></span>(stations, phab, <span class="dt">qa =</span> <span class="ot">FALSE</span>)</a></code></pre></div>
+</div>
+<div id="error-checks-for-input-data" class="section level2">
+<h2 class="hasAnchor">
+<a href="#error-checks-for-input-data" class="anchor"></a>Error checks for input data</h2>
+<p>The <code><a href="reference/IPI.html">IPI()</a></code> function will evaluate both the <code>stations</code> and <code>phab</code> input datasets for the correct format before estimating IPI scores. The scores will not be calculated if any errors are encountered. The following checks are made:</p>
 <ul>
 <li>No duplicate station codes in <code>stations</code>
 </li>
 <li>All station codes in <code>stations</code> are in <code>phab</code> and the converse</li>
-<li>All required fields in <code>stations</code> and <code>phab</code>
-</li>
-<li>All required PHAB variables are present in the <code>variable</code> field of <code>phab</code> for each station and sample date</li>
+<li>All required fields are present in <code>stations</code> and <code>phab</code>, see above</li>
+<li>All required PHAB variables are present in the <code>variable</code> field of <code>phab</code> for each station and sample date, these include <code>XSLOPE</code>, <code>XBKF_W</code>, <code>H_AqHab</code>, <code>PCT_SAFN</code>, <code>XCMG</code>, <code>Ev_FlowHab</code>, <code>H_SubNat</code>, <code>XC</code>, <code>PCT_POOL</code>, <code>XFC_ALG</code>, <code>PCT_SA</code>, and <code>PCT_RC</code>.</li>
 <li>No duplicate results for PHAB variables at each station and sample date</li>
 <li>All input variables for <code>stations</code> and <code>phab</code> are non-negative. The variables <code>XBKF_W</code>, <code>H_Aq_Hab</code>, <code>Ev_FlowHab</code>, and <code>H_SubNat</code> in <code>phab</code> must also be greater than zero.</li>
 </ul>
-<p>The <code>chkinp</code> function can be used independently to check formatting of the input data. The function will return an error if the data are formatted incorrectly.</p>
-<div class="sourceCode" id="cb4"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb4-1" data-line-number="1">stations<span class="op">$</span>StationCode[<span class="dv">1</span>] &lt;-<span class="st"> </span>stations<span class="op">$</span>StationCode[<span class="dv">2</span>]</a>
-<a class="sourceLine" id="cb4-2" data-line-number="2"><span class="kw"><a href="reference/chkinp.html">chkinp</a></span>(stations, phab)</a></code></pre></div>
-<pre><code>## Error: 
-## 
-## remove duplicated stations: 205PS0157
-## 
-## station 105PS0107 from phab not in stations</code></pre>
-<div class="sourceCode" id="cb6"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb6-1" data-line-number="1"><span class="kw">data</span>(stations)</a>
-<a class="sourceLine" id="cb6-2" data-line-number="2">phab &lt;-<span class="st"> </span><span class="kw">subset</span>(phab, <span class="op">!</span>phab<span class="op">$</span>Variable <span class="op">%in%</span><span class="st"> 'XSLOPE'</span>)</a>
-<a class="sourceLine" id="cb6-3" data-line-number="3"><span class="kw"><a href="reference/chkinp.html">chkinp</a></span>(stations, phab)</a></code></pre></div>
-<pre><code>## Error: 
-## 
-## Required PHAB variables not present:
-## 
-## 105PS0107, 9/14/2009:  XSLOPE
-## 205PS0157, 6/19/2012:  XSLOPE
-## 305PS0057, 6/16/2009:  XSLOPE
-## 504PS0147, 6/23/2008:  XSLOPE
-## 632PS0007, 7/23/2008:  XSLOPE
-## 901PS0057, 5/14/2008:  XSLOPE</code></pre>
+<p>The <code><a href="reference/IPI.html">IPI()</a></code> function will print informative messages to the R console if any of these errors are encountered. It is the responsibility of the analyst to correct any errors in the raw data before proceeding.</p>
 </div>
 </div>
   </div>

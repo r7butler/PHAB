@@ -13,9 +13,9 @@ output:
 [![Travis-CI Build Status](https://travis-ci.org/SCCWRP/PHAB.svg?branch=master)](https://travis-ci.org/SCCWRP/PHAB)
 [![DOI](https://zenodo.org/badge/108920024.svg)](https://zenodo.org/badge/latestdoi/108920024)
 
-The PHAB package contains materials to calculate scores of physical habitat integrity for California streams. 
+The PHAB package contains materials to calculate an index of physical integrity (IPI) for California streams. This index is estimated using site-specific data and available metrics of physical habitat to describe overall integrity.  
 
-This tutorial assumes that the user is familiar with basic operations in the R programming language, such as data import, export, and manipulation. Although not required, we recommend using an integrated development environemnt for R, such as R-studio, which can be downloaded at [http://www.rstudio.com](http://www.rstudio.com). New users are encouraged to pursue training opportunities, such as those hosted by local R user groups. A list of such groups may be found here: http://blog.revolutionanalytics.com/local-r-groups.html. R training material developed by SCCWRP can also be found online: [https://sccwrp.github.io/SCCWRP_R_training/](https://sccwrp.github.io/SCCWRP_R_training/)
+This tutorial assumes that the user is familiar with basic operations in the R programming language, such as data import, export, and manipulation. Although not required, we recommend using an integrated development environment for R, such as R-studio, which can be downloaded at [http://www.rstudio.com](http://www.rstudio.com). New users are encouraged to pursue training opportunities, such as those hosted by local R user groups. A list of such groups may be found here: http://blog.revolutionanalytics.com/local-r-groups.html. R training material developed by SCCWRP can also be found online: [https://sccwrp.github.io/SCCWRP_R_training/](https://sccwrp.github.io/SCCWRP_R_training/)
 
 ## Installation and basic usage
 
@@ -46,47 +46,77 @@ install.packages('devtools')
 library(devtools)
 ```
 
-Now the `install_github()` function can be used to install PHAB from GitHub.  The package can be loaded after it's installed.
+Now the `install_github()` function from devtools can be used to install PHAB from GitHub.  The package can be loaded after installation.
 
 ```{r eval = F}
 install_github('SCCWRP/PHAB')
 library(PHAB)
 ```
 
-The installation process may take a few seconds.  Both the devtools and PHAB packages depend on other R packages, all of which are installed together.  If an error is encountered during installation, an informative message is usually printed in the R console.  This information can help troubleshoot the problem.  Please contact SCCWRP staff if additional errors are encountered. 
+The installation process may take a few seconds.  Both the devtools and PHAB packages depend on other R packages, all of which are installed together.  If an error is encountered during installation, an informative message is usually printed in the R console.  This information can help troubleshoot the problem, such as identifying which dependent packages may need to be installed separately by the user.  Please contact SCCWRP staff if additional errors are encountered. 
 
-After the package is successfully installed, you should be able to view the help file for the PHAB core function:
+After the package is successfully installed, you will be able to view the help file for the PHAB core function:
+
 ```{r, eval = F}
 ?IPI
 ```
 
 ## Preparing the input data
 
-The `IPI()` function is used to calculate PHAB scores using both station and PHAB metric data as input.  The input data must follow a particular format and sample data are provided with the PHAB package as a demonstration.  These data are loaded automatically once the package is installed and loaded.  You can view the `stations` and `phab` input data from the R console:
+The `IPI()` function is used to calculate PHAB scores using both station and PHAB metric data as input.  The input data must be correctly formatted and sample data are provided with the PHAB package to demonstrate this format.  These data are loaded automatically once the package is installed and loaded.  You can view the `stations` and `phab` example data from the R console:
 
 ```{r}
 head(stations)
 head(phab)
 ```
 
+The `stations` data includes site-specific information that are derived from geospatial analysis. These data are in wide format where one row corresponds to data for one site. The following fields are required:
+
+* `StationCode` character string for the unique station identifier
+* `MAX_ELEV` numeric for maximum elevation in the watershed in meters
+* `AREA_SQKM` numeric for watershed area in square kilometers
+* `MEANP_WS` numeric for mean phosphorus geology from the watershed
+* `New_Long` numeric for site longitude, decimal degrees
+* `SITE_ELEV` numeric for site elevation
+* `KFCT_AVE` numeric for average soil erodibility factor
+* `New_Lat` numeric for site latitude, decimal degrees
+* `MINP_WS` numeric for minimum phosphorus geology from the watershed
+* `PPT_00_09` numeric for average precipitation (2000 to 2009) at the sample point, in hundredths of millimeters
+
+The `phab` data include estimated physical habitat metrics that are compiled along with the station data to get the IPI score. These data are in long format where multiple rows correspond to physical habitat metric values for a single site.  The following fields are required: 
+
+* `StationCode` character string for the unique station identifier
+* `SampleDate` character string indicating date of the sample
+* `Variable` character string indicating the name of the PHAB metric
+* `Result` numeric for the resulting metric value
+* `Count_Calc` numeric for number of unique observations that were used to estimate the value in `Result`
+
+All required fields for the `stations` and `phab` data are case-sensitive and must be spelled correctly.  The order of the fields does not matter.  All `StationCode` values must be shared between the datasets.  As described below, the `IPI()` function checks the format of the input data prior to estimating scores.
+
+## Using the IPI function
+
+The `IPI()` function can be used on station and PHAB data that are correctly formatted as shown above.
+
+```{r}
+IPI(stations, phab)
+```
+
+This function will return a data frame of IPI scores estimated at each site on each unique sample date.  The output data are in wide format with one row for each sample date at a site.  The final IPI score and the percentile estimate of the score are in the `IPI` and `IPI_percentile` columns, respectively.  The corresponding observed PHAB metrics, predicted metrics, and metric scores are included in the columns that follow.  Finaly, the last five columns include quality assurance scores for select metrics.  These final columns are included by default and can be removed from the output by using the `qa = FALSE` argument.
+
+```{r eval = F}
+IPI(stations, phab, qa = FALSE)
+```
 
 ## Error checks for input data
 
-Error checks are used to verify correct formatting of the input data.  The following checks are made:
+The `IPI()` function will evaluate both the `stations` and `phab` input datasets for the correct format before estimating IPI scores.  The scores will not be calculated if any errors are encountered.  The following checks are made:
 
 * No duplicate station codes in `stations`
 * All station codes in `stations` are in `phab` and the converse
-* All required fields in `stations` and `phab`
-* All required PHAB variables are present in the `variable` field of `phab` for each station and sample date
+* All required fields are present in `stations` and `phab`, see above
+* All required PHAB variables are present in the `variable` field of `phab` for each station and sample date, these include `XSLOPE`, `XBKF_W`, `H_AqHab`, `PCT_SAFN`, `XCMG`, `Ev_FlowHab`, `H_SubNat`, `XC`, `PCT_POOL`, `XFC_ALG`, `PCT_SA`, and `PCT_RC`.
 * No duplicate results for PHAB variables at each station and sample date
 * All input variables for `stations` and `phab` are non-negative. The variables `XBKF_W`, `H_Aq_Hab`, `Ev_FlowHab`, and `H_SubNat` in `phab` must also be greater than zero.
 
-The `chkinp` function can be used independently to check formatting of the input data.  The function will return an error if the data are formatted incorrectly. 
-```{r, error = T}
-stations$StationCode[1] <- stations$StationCode[2]
-chkinp(stations, phab)
-data(stations)
-phab <- subset(phab, !phab$Variable %in% 'XSLOPE')
-chkinp(stations, phab)
-```
+The `IPI()` function will print informative messages to the R console if any of these errors are encountered.  It is the responsibility of the analyst to correct any errors in the raw data before proceeding.  
 
