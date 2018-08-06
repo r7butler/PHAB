@@ -53,7 +53,7 @@ install_github('SCCWRP/PHAB')
 library(PHAB)
 ```
 
-The installation process may take a few seconds.  Both the devtools and PHAB packages depend on other R packages, all of which are installed together.  If an error is encountered during installation, an informative message is usually printed in the R console.  This information can help troubleshoot the problem, such as identifying which dependent packages may need to be installed separately by the user.  Please contact SCCWRP staff if additional errors are encountered. 
+The installation process may take a few seconds.  Both the devtools and PHAB packages depend on other R packages, all of which are installed together.  If an error is encountered during installation, an informative message is usually printed in the R console.  This information can help troubleshoot the problem, such as identifying which dependent packages may need to be installed separately.  Please contact SCCWRP staff if additional errors are encountered. 
 
 After the package is successfully installed, you will be able to view the help file for the PHAB core function:
 
@@ -72,30 +72,30 @@ head(phab)
 
 The `stations` data includes site-specific information that are derived from geospatial analysis. These data are in wide format where one row corresponds to data for one site. The following fields are required:
 
-* `StationCode` unique station identifier (character string)
-* `MAX_ELEV` maximum elevation in the watershed in meters (numeric)
-* `AREA_SQKM` watershed area in square kilometers (numeric)
-* `MEANP_WS` mean phosphorus geology from the watershed (numeric)
-* `New_Long` site longitude, decimal degrees (numeric)
-* `SITE_ELEV` site elevation (numeric)
-* `KFCT_AVE` average soil erodibility factor (numeric)
-* `New_Lat` site latitude, decimal degrees (numeric)
-* `MINP_WS` minimum phosphorus geology from the watershed (numeric)
-* `PPT_00_09` average precipitation (2000 to 2009) at the sample point, in hundredths of millimeters (numeric)
+* `StationCode` unique station identifier
+* `MAX_ELEV` maximum elevation in the watershed in meters
+* `AREA_SQKM` watershed area in square kilometers
+* `MEANP_WS` mean phosphorus geology from the watershed
+* `New_Long` site longitude, decimal degrees
+* `SITE_ELEV` site elevation
+* `KFCT_AVE` average soil erodibility factor
+* `New_Lat` site latitude, decimal degrees
+* `MINP_WS` minimum phosphorus geology from the watershed
+* `PPT_00_09` average precipitation (2000 to 2009) at the sample point, in hundredths of millimeters
 
-The `phab` data include estimated physical habitat metrics that are compiled along with the station data to get the IPI score. These data are in long format where multiple rows correspond to physical habitat metric values for a single site.  The following fields are required: 
+The `phab` data include estimated physical habitat metrics that are compiled along with the `stations` data to get the IPI score. These data are in long format where multiple rows correspond to physical habitat metric values for a single site.  The following fields are required: 
 
-* `StationCode` unique station identifier (character string)
-* `SampleDate` date of the sample (character string)
-* `Variable` name of the PHAB metric (character string)
-* `Result` resulting metric value (numeric)
-* `Count_Calc` number of unique observations that were used to estimate the value in `Result` (numeric)
+* `StationCode` unique station identifier
+* `SampleDate` date of the sample
+* `Variable` name of the PHAB metric
+* `Result` resulting metric value
+* `Count_Calc` number of unique observations that were used to estimate the value in `Result` 
 
 Values in the `Variable` column of the `phab` data indicate which PHAB metric was measured that corresponds to values in the `Result` column.  The required PHAB metrics that should be provided for every site specified by `StationCode` are as follows:
 
 * `XSLOPE` mean slope of reach
 * `XBKF_W` mean bankfull width
-* `H_AqHab` Shannon Diversity of aquati chabitat types
+* `H_AqHab` Shannon Diversity of aquatic chabitat types
 * `PCT_SAFN` percent substrates smaller than sand (<2 mm)
 * `XCMG` riparian cover sum of three layers
 * `Ev_FlowHab` evenness of flow habitat types
@@ -111,7 +111,7 @@ All required fields for the `stations` and `phab` data are case-sensitive and mu
 
 ## Using the IPI function
 
-The `IPI()` function can be used on station and PHAB data that are correctly formatted as shown above.  The `stations` and `phab` example data are in the correct format and are loaded automatically with the PHAB package.
+The `IPI()` function can be used on station and PHAB data that are correctly formatted as shown above.  The `stations` and `phab` example data are in the correct format and are loaded automatically with the PHAB package.  These data are used here to demonstrate use of the `IPI()` function.
 
 ```{r}
 IPI(stations, phab)
@@ -119,11 +119,11 @@ IPI(stations, phab)
 
 A data frame of IPI scores estimated at each site on each unique sample date is returned.  The output data are in wide format with one row for each sample date at a site. Detailed information for each output column is as follows:
 
-* `StationCode` unique station identifier (character string)
-* `SampleDate` date of the sample (character string)
-* `PHAB_SampleID` unique station identifier and sample date, used if more than one sample was collected at a station (character string)
-* `IPI` score for the index of physical integrity (numeric)
-* `IPI_percentile` the percentile of the IPI score relative to all other stations (numeric)
+* `StationCode` unique station identifier 
+* `SampleDate` date of the sample 
+* `PHAB_SampleID` unique station identifier and sample date, used if more than one sample was collected at a station 
+* `IPI` score for the index of physical integrity 
+* `IPI_percentile` the percentile of the IPI score relative to all other stations
 * `Ev_FlowHab` evenness of flow habitat types, from the raw PHAB metric
 * `Ev_FlowHab_score` IPI score for evenness of flow habitat types
 * `H_AqHab` Shannon Diversity of aquatic habitat types, from the raw PHAB metric
@@ -138,29 +138,33 @@ A data frame of IPI scores estimated at each site on each unique sample date is 
 * `XCMG` riparian cover as sum of three layers, from the raw PHAB metric
 * `XCMG_pred` predicted riparian cover as sum of three layers
 * `XCMG_score` scored riparian cover as sum of three layers
-* `IPI_qa` quality assurance for score for the index of physical integrity 
+* `IPI_qa` quality assurance for the IPI score
 * `Ev_FlowHab_qa` quality assurance for evenness of flow habitat types
 * `H_AqHab_qa` quality assurance for Shannon Diversity of aquatic habitat types
-* `H_SubNat_qa` quality assurance for Shannon Diversityh of natural substrate types
+* `H_SubNat_qa` quality assurance for Shannon Diversity of natural substrate types
 * `PCT_SAFN_qa` quality assurance for percent substrates smaller than sand (<2 mm)
 * `XCMG_qa` quality assurance for riparian cover as sum of three layers
 
 Metrics are included in the output as observed PHAB metrics, predicted metrics, and scored metrics.  The observed PHAB metrics are returned as is from the input data.  Some PHAB metrics include a predicted column that shows the modelled metric value based on the observed conditions at a site. Scored PHAB metrics are based on the difference between the observed and predicted scores for metrics with predictions, or estimated from the observed metric using an empirical formula for those without predicted values.  
 
-The last five columns include quality assurance information for the IPI score and select metrics. QA values for metrics less than one indicate less quality assurance.  The QA value for the IPI is based on the lowest score among all metrics.  These columns are included by default and can be removed from the output by using the `qa = FALSE` argument.
+The last five columns include quality assurance information for the IPI score and select metrics. QA values for metrics less than one indicate less quality assurance, usually resulting from less than the recommended locations being used at a sample site to assess a metric.  The QA value for the IPI is based on the lowest score among all metrics.  These columns are included by default and can be removed from the output by using the `qa = FALSE` argument.
 
 ```{r eval = F}
 IPI(stations, phab, qa = FALSE)
 ```
 
+## Interpreting IPI scores
+
+Higher IPI scores returned by the `IPI()` function indicate physical habitat integrity at a station.  IPI scores > 1 represent locations with conditions similar to reference sites.  All metric scores are weighted equally to determine the overall IPI score.  The scored PHAB metrics vary from zero to one, with values closer to one indicating conditions that are likely to be observed with intact physical habitat.  For the observed PHAB metrics, all are expected to decrease under degraded physical conditions, except PCT_SAFN which is expected to increase. 
+
 ## Error checks for input data
 
 The `IPI()` function will evaluate both the `stations` and `phab` input datasets for the correct format before estimating IPI scores.  The scores will not be calculated if any errors are encountered.  The following checks are made:
 
-* No duplicate station codes in `stations`
+* No duplicate station codes in `stations`, i.e., one row per station
 * All station codes in `stations` are in `phab` and the converse
 * All required fields are present in `stations` and `phab`, see above
-* All required PHAB variables are present in the `variable` field of `phab` for each station and sample date
+* All required PHAB metrics are present in the `variable` field of `phab` for each station and sample date
 * No duplicate results for PHAB variables at each station and sample date
 * All input variables for `stations` and `phab` are non-negative. The variables `XBKF_W`, `H_Aq_Hab`, `Ev_FlowHab`, and `H_SubNat` in `phab` must also be greater than zero.
 

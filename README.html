@@ -183,7 +183,7 @@ library(devtools)</code></pre>
 <p>Now the <code>install_github()</code> function from devtools can be used to install PHAB from GitHub. The package can be loaded after installation.</p>
 <pre class="r"><code>install_github(&#39;SCCWRP/PHAB&#39;)
 library(PHAB)</code></pre>
-<p>The installation process may take a few seconds. Both the devtools and PHAB packages depend on other R packages, all of which are installed together. If an error is encountered during installation, an informative message is usually printed in the R console. This information can help troubleshoot the problem, such as identifying which dependent packages may need to be installed separately by the user. Please contact SCCWRP staff if additional errors are encountered.</p>
+<p>The installation process may take a few seconds. Both the devtools and PHAB packages depend on other R packages, all of which are installed together. If an error is encountered during installation, an informative message is usually printed in the R console. This information can help troubleshoot the problem, such as identifying which dependent packages may need to be installed separately. Please contact SCCWRP staff if additional errors are encountered.</p>
 <p>After the package is successfully installed, you will be able to view the help file for the PHAB core function:</p>
 <pre class="r"><code>?IPI</code></pre>
 <div id="preparing-the-input-data" class="section level2">
@@ -214,30 +214,30 @@ library(PHAB)</code></pre>
 ## 6   105PS0107  9/14/2009     Ev_SubNat   0.75          8</code></pre>
 <p>The <code>stations</code> data includes site-specific information that are derived from geospatial analysis. These data are in wide format where one row corresponds to data for one site. The following fields are required:</p>
 <ul>
-<li><code>StationCode</code> unique station identifier (character string)</li>
-<li><code>MAX_ELEV</code> maximum elevation in the watershed in meters (numeric)</li>
-<li><code>AREA_SQKM</code> watershed area in square kilometers (numeric)</li>
-<li><code>MEANP_WS</code> mean phosphorus geology from the watershed (numeric)</li>
-<li><code>New_Long</code> site longitude, decimal degrees (numeric)</li>
-<li><code>SITE_ELEV</code> site elevation (numeric)</li>
-<li><code>KFCT_AVE</code> average soil erodibility factor (numeric)</li>
-<li><code>New_Lat</code> site latitude, decimal degrees (numeric)</li>
-<li><code>MINP_WS</code> minimum phosphorus geology from the watershed (numeric)</li>
-<li><code>PPT_00_09</code> average precipitation (2000 to 2009) at the sample point, in hundredths of millimeters (numeric)</li>
+<li><code>StationCode</code> unique station identifier</li>
+<li><code>MAX_ELEV</code> maximum elevation in the watershed in meters</li>
+<li><code>AREA_SQKM</code> watershed area in square kilometers</li>
+<li><code>MEANP_WS</code> mean phosphorus geology from the watershed</li>
+<li><code>New_Long</code> site longitude, decimal degrees</li>
+<li><code>SITE_ELEV</code> site elevation</li>
+<li><code>KFCT_AVE</code> average soil erodibility factor</li>
+<li><code>New_Lat</code> site latitude, decimal degrees</li>
+<li><code>MINP_WS</code> minimum phosphorus geology from the watershed</li>
+<li><code>PPT_00_09</code> average precipitation (2000 to 2009) at the sample point, in hundredths of millimeters</li>
 </ul>
-<p>The <code>phab</code> data include estimated physical habitat metrics that are compiled along with the station data to get the IPI score. These data are in long format where multiple rows correspond to physical habitat metric values for a single site. The following fields are required:</p>
+<p>The <code>phab</code> data include estimated physical habitat metrics that are compiled along with the <code>stations</code> data to get the IPI score. These data are in long format where multiple rows correspond to physical habitat metric values for a single site. The following fields are required:</p>
 <ul>
-<li><code>StationCode</code> unique station identifier (character string)</li>
-<li><code>SampleDate</code> date of the sample (character string)</li>
-<li><code>Variable</code> name of the PHAB metric (character string)</li>
-<li><code>Result</code> resulting metric value (numeric)</li>
-<li><code>Count_Calc</code> number of unique observations that were used to estimate the value in <code>Result</code> (numeric)</li>
+<li><code>StationCode</code> unique station identifier</li>
+<li><code>SampleDate</code> date of the sample</li>
+<li><code>Variable</code> name of the PHAB metric</li>
+<li><code>Result</code> resulting metric value</li>
+<li><code>Count_Calc</code> number of unique observations that were used to estimate the value in <code>Result</code></li>
 </ul>
 <p>Values in the <code>Variable</code> column of the <code>phab</code> data indicate which PHAB metric was measured that corresponds to values in the <code>Result</code> column. The required PHAB metrics that should be provided for every site specified by <code>StationCode</code> are as follows:</p>
 <ul>
 <li><code>XSLOPE</code> mean slope of reach</li>
 <li><code>XBKF_W</code> mean bankfull width</li>
-<li><code>H_AqHab</code> Shannon Diversity of aquati chabitat types</li>
+<li><code>H_AqHab</code> Shannon Diversity of aquatic chabitat types</li>
 <li><code>PCT_SAFN</code> percent substrates smaller than sand (&lt;2 mm)</li>
 <li><code>XCMG</code> riparian cover sum of three layers</li>
 <li><code>Ev_FlowHab</code> evenness of flow habitat types</li>
@@ -252,7 +252,7 @@ library(PHAB)</code></pre>
 </div>
 <div id="using-the-ipi-function" class="section level2">
 <h2>Using the IPI function</h2>
-<p>The <code>IPI()</code> function can be used on station and PHAB data that are correctly formatted as shown above. The <code>stations</code> and <code>phab</code> example data are in the correct format and are loaded automatically with the PHAB package.</p>
+<p>The <code>IPI()</code> function can be used on station and PHAB data that are correctly formatted as shown above. The <code>stations</code> and <code>phab</code> example data are in the correct format and are loaded automatically with the PHAB package. These data are used here to demonstrate use of the <code>IPI()</code> function.</p>
 <pre class="r"><code>IPI(stations, phab)</code></pre>
 <pre><code>##   StationCode SampleDate       PHAB_SampleID  IPI IPI_percentile
 ## 1   105PS0107  9/14/2009 105PS0107_9/14/2009 1.16           0.90
@@ -291,11 +291,11 @@ library(PHAB)</code></pre>
 ## 6           1    0.95</code></pre>
 <p>A data frame of IPI scores estimated at each site on each unique sample date is returned. The output data are in wide format with one row for each sample date at a site. Detailed information for each output column is as follows:</p>
 <ul>
-<li><code>StationCode</code> unique station identifier (character string)</li>
-<li><code>SampleDate</code> date of the sample (character string)</li>
-<li><code>PHAB_SampleID</code> unique station identifier and sample date, used if more than one sample was collected at a station (character string)</li>
-<li><code>IPI</code> score for the index of physical integrity (numeric)</li>
-<li><code>IPI_percentile</code> the percentile of the IPI score relative to all other stations (numeric)</li>
+<li><code>StationCode</code> unique station identifier</li>
+<li><code>SampleDate</code> date of the sample</li>
+<li><code>PHAB_SampleID</code> unique station identifier and sample date, used if more than one sample was collected at a station</li>
+<li><code>IPI</code> score for the index of physical integrity</li>
+<li><code>IPI_percentile</code> the percentile of the IPI score relative to all other stations</li>
 <li><code>Ev_FlowHab</code> evenness of flow habitat types, from the raw PHAB metric</li>
 <li><code>Ev_FlowHab_score</code> IPI score for evenness of flow habitat types</li>
 <li><code>H_AqHab</code> Shannon Diversity of aquatic habitat types, from the raw PHAB metric</li>
@@ -310,25 +310,29 @@ library(PHAB)</code></pre>
 <li><code>XCMG</code> riparian cover as sum of three layers, from the raw PHAB metric</li>
 <li><code>XCMG_pred</code> predicted riparian cover as sum of three layers</li>
 <li><code>XCMG_score</code> scored riparian cover as sum of three layers</li>
-<li><code>IPI_qa</code> quality assurance for score for the index of physical integrity</li>
+<li><code>IPI_qa</code> quality assurance for the IPI score</li>
 <li><code>Ev_FlowHab_qa</code> quality assurance for evenness of flow habitat types</li>
 <li><code>H_AqHab_qa</code> quality assurance for Shannon Diversity of aquatic habitat types</li>
-<li><code>H_SubNat_qa</code> quality assurance for Shannon Diversityh of natural substrate types</li>
+<li><code>H_SubNat_qa</code> quality assurance for Shannon Diversity of natural substrate types</li>
 <li><code>PCT_SAFN_qa</code> quality assurance for percent substrates smaller than sand (&lt;2 mm)</li>
 <li><code>XCMG_qa</code> quality assurance for riparian cover as sum of three layers</li>
 </ul>
 <p>Metrics are included in the output as observed PHAB metrics, predicted metrics, and scored metrics. The observed PHAB metrics are returned as is from the input data. Some PHAB metrics include a predicted column that shows the modelled metric value based on the observed conditions at a site. Scored PHAB metrics are based on the difference between the observed and predicted scores for metrics with predictions, or estimated from the observed metric using an empirical formula for those without predicted values.</p>
-<p>The last five columns include quality assurance information for the IPI score and select metrics. QA values for metrics less than one indicate less quality assurance. The QA value for the IPI is based on the lowest score among all metrics. These columns are included by default and can be removed from the output by using the <code>qa = FALSE</code> argument.</p>
+<p>The last five columns include quality assurance information for the IPI score and select metrics. QA values for metrics less than one indicate less quality assurance, usually resulting from less than the recommended locations being used at a sample site to assess a metric. The QA value for the IPI is based on the lowest score among all metrics. These columns are included by default and can be removed from the output by using the <code>qa = FALSE</code> argument.</p>
 <pre class="r"><code>IPI(stations, phab, qa = FALSE)</code></pre>
+</div>
+<div id="interpreting-ipi-scores" class="section level2">
+<h2>Interpreting IPI scores</h2>
+<p>Higher IPI scores returned by the <code>IPI()</code> function indicate physical habitat integrity at a station. IPI scores &gt; 1 represent locations with conditions similar to reference sites. All metric scores are weighted equally to determine the overall IPI score. The scored PHAB metrics vary from zero to one, with values closer to one indicating conditions that are likely to be observed with intact physical habitat. For the observed PHAB metrics, all are expected to decrease under degraded physical conditions, except PCT_SAFN which is expected to increase.</p>
 </div>
 <div id="error-checks-for-input-data" class="section level2">
 <h2>Error checks for input data</h2>
 <p>The <code>IPI()</code> function will evaluate both the <code>stations</code> and <code>phab</code> input datasets for the correct format before estimating IPI scores. The scores will not be calculated if any errors are encountered. The following checks are made:</p>
 <ul>
-<li>No duplicate station codes in <code>stations</code></li>
+<li>No duplicate station codes in <code>stations</code>, i.e., one row per station</li>
 <li>All station codes in <code>stations</code> are in <code>phab</code> and the converse</li>
 <li>All required fields are present in <code>stations</code> and <code>phab</code>, see above</li>
-<li>All required PHAB variables are present in the <code>variable</code> field of <code>phab</code> for each station and sample date</li>
+<li>All required PHAB metrics are present in the <code>variable</code> field of <code>phab</code> for each station and sample date</li>
 <li>No duplicate results for PHAB variables at each station and sample date</li>
 <li>All input variables for <code>stations</code> and <code>phab</code> are non-negative. The variables <code>XBKF_W</code>, <code>H_Aq_Hab</code>, <code>Ev_FlowHab</code>, and <code>H_SubNat</code> in <code>phab</code> must also be greater than zero.</li>
 </ul>
