@@ -111,7 +111,7 @@ chkinp <- function(stations, phab, qa = TRUE, allerr = TRUE){
   ##
   # check if phab variables present, need to return sample and date with missing vars
   
-  phavar <- c('XSLOPE', 'XBKF_W', 'H_AqHab', 'PCT_SAFN', 'XCMG', 'Ev_FlowHab', 'H_SubNat', 'XC', 'PCT_POOL', 'XFC_ALG', 'PCT_SA', 'PCT_RC')
+  phavar <- c('XSLOPE', 'XBKF_W', 'H_AqHab', 'PCT_SAFN', 'XCMG', 'Ev_FlowHab', 'H_SubNat', 'XC', 'PCT_POOL', 'XFC_ALG', 'PCT_RC')
   chk <- phab %>% 
     select(StationCode, SampleDate, Variable) %>% 
     unique %>% 
@@ -190,7 +190,7 @@ chkinp <- function(stations, phab, qa = TRUE, allerr = TRUE){
   
   # use full phab variables if t, otherwise remove some
   if(qa) selphab <- phavar
-  else selphab <- phavar[!phavar %in% c('PCT_POOL', 'PCT_SA', 'XC', 'XFC_ALG')]
+  else selphab <- phavar[!phavar %in% c('PCT_POOL', 'PCT_RC', 'XC', 'XFC_ALG')]
     
   chk <- phab %>% 
     select(Variable, Result) %>% 

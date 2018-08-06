@@ -34,7 +34,7 @@ IPI <- function(stations, phab, qa = TRUE, allerr = TRUE){
 
   # subset phab by required metrics
   all.req.phab<-c("XSLOPE","XBKF_W", "H_AqHab","PCT_SAFN","XCMG","Ev_FlowHab","H_SubNat","XC",
-                  "PCT_POOL","XFC_ALG","PCT_SA","PCT_RC")
+                  "PCT_POOL","XFC_ALG","PCT_RC")
   phab<-phab[which(phab$Variable %in% all.req.phab),c("StationCode","SampleDate","PHAB_SampleID", "Variable","Result","Count_Calc")]
   
   # What are the required predictors?
@@ -116,8 +116,8 @@ IPI <- function(stations, phab, qa = TRUE, allerr = TRUE){
       ddply(phab, ~PHAB_SampleID, summarize,
             Ev_FlowHab_qa=round(mean(Count_Calc[which(Variable=="PCT_POOL")])/10,2),
             H_AqHab_qa=round(mean(Count_Calc[which(Variable=="XFC_ALG")])/11,2),
-            H_SubNat_qa=round(mean(Count_Calc[which(Variable=="PCT_SA")])/105,2),
-            PCT_SAFN_qa=round(mean(Count_Calc[which(Variable=="PCT_SA")])/105,2),
+            H_SubNat_qa=round(mean(Count_Calc[which(Variable=="PCT_RC")])/105,2),
+            PCT_SAFN_qa=round(mean(Count_Calc[which(Variable=="PCT_RC")])/105,2),
             XCMG_qa=round(mean(Count_Calc[which(Variable=="XC")])/22,2)
             # XWD_RAT_qa=round(mean(Count_Calc[which(Variable=="XWIDTH")])/21,2)
       )
