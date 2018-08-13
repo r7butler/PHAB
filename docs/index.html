@@ -330,10 +330,32 @@
 <a href="#interpreting-ipi-scores" class="anchor"></a>Interpreting IPI scores</h2>
 <p>Higher IPI scores returned by the <code><a href="reference/IPI.html">IPI()</a></code> function indicate better (i.e., more reference-like) physical habitat integrity at a station. IPI scores near 1 represent locations with conditions similar to reference sites. All metric scores are weighted equally to determine the overall IPI score. The individual scored PHAB metrics vary from zero to one, with values closer to one indicating conditions that are likely to represent intact physical habitat. For the observed PHAB metrics, all are expected to decrease under degraded physical conditions, except PCT_SAFN which is expected to increase.</p>
 </div>
-<div id="helper-functions" class="section level2">
+<div id="calibration-data" class="section level2">
 <h2 class="hasAnchor">
-<a href="#helper-functions" class="anchor"></a>Helper functions</h2>
-<p>To add.</p>
+<a href="#calibration-data" class="anchor"></a>Calibration data</h2>
+<p>An additional data file is available from the PHAB package that shows calibration data for scoring the IPI metrics. This file is called <code>refcal</code> and includes observed and predicted scores at reference and stressed sites for the five PHAB metrics. Metrics are scored based on deviation from the 5th and 95th percentile of scores at reference or calibration sites. The <code>refcal</code> dataset includes observations at these sites that were used to identify the percentile cutoffs for estimating metric scores.</p>
+<div class="sourceCode" id="cb14"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb14-1" data-line-number="1"><span class="kw">head</span>(refcal)</a></code></pre></div>
+<pre><code>##     Variable StationCode      SampleID2   SiteSet Result Predicted
+## 1 Ev_FlowHab   000CAT228 000CAT22840400    RefCal   0.77 0.6498149
+## 2 Ev_FlowHab   101WE1111 101WE111137474 StressCal   0.94 0.6535123
+## 3 Ev_FlowHab   103CDCHHR 103CDCHHR40435    RefCal   0.63 0.7295132
+## 4 Ev_FlowHab   103WER026 103WER02637831    RefCal   0.75 0.6590854
+## 5 Ev_FlowHab   103WER029 103WER02937832    RefCal   0.94 0.7125525
+## 6 Ev_FlowHab   105BVCAGC 105BVCAGC40442    RefCal   0.84 0.6973526</code></pre>
+<ul>
+<li>
+<code>Variable</code> name of the PHAB metric</li>
+<li>
+<code>StationCode</code> unique station identifier</li>
+<li>
+<code>SampleIDs</code> unique identifier of the sampling event</li>
+<li>
+<code>SiteSet</code> indicating if a site was refernece or stressed</li>
+<li>
+<code>Result</code> resulting metric value</li>
+<li>
+<code>Predicted</code> predicted metric value</li>
+</ul>
 </div>
 <div id="error-checks-for-input-data" class="section level2">
 <h2 class="hasAnchor">

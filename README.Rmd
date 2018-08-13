@@ -161,9 +161,20 @@ IPI(stations, phab, qa = FALSE)
 
 Higher IPI scores returned by the `IPI()` function indicate better (i.e., more reference-like) physical habitat integrity at a station.  IPI scores near 1 represent locations with conditions similar to reference sites.  All metric scores are weighted equally to determine the overall IPI score.  The individual scored PHAB metrics vary from zero to one, with values closer to one indicating conditions that are likely to represent intact physical habitat.  For the observed PHAB metrics, all are expected to decrease under degraded physical conditions, except PCT_SAFN which is expected to increase. 
 
-## Helper functions
+## Calibration data
 
-To add.
+An additional data file is available from the PHAB package that shows calibration data for scoring the IPI metrics.  This file is called `refcal` and includes observed and predicted scores at reference and stressed sites for the five PHAB metrics.  Metrics are scored based on deviation from the 5th and 95th percentile of scores at reference or calibration sites.  The `refcal` dataset includes observations at these sites that were used to identify the percentile cutoffs for estimating metric scores.
+
+```{r}
+head(refcal)
+```
+
+* `Variable` name of the PHAB metric
+* `StationCode` unique station identifier
+* `SampleIDs`  unique identifier of the sampling event
+* `SiteSet` indicating if a site was refernece or stressed
+* `Result` resulting metric value
+* `Predicted` predicted metric value
 
 ## Error checks for input data
 

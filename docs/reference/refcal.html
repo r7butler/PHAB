@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Function reference • PHAB</title>
+<title>Calibration data — refcal • PHAB</title>
 
 <!-- jquery -->
 <script src="https://code.jquery.com/jquery-3.1.0.min.js" integrity="sha384-nrOSfDHtoPMzJHjVTdCopGqIqeYETSXhZDFyniQ8ZHcVy08QesyHcnOUpMpqnmWq" crossorigin="anonymous"></script>
@@ -30,7 +30,10 @@
 
 
 
-<meta property="og:title" content="Function reference" />
+<meta property="og:title" content="Calibration data — refcal" />
+
+<meta property="og:description" content="Calibration data used to establish scoring limits for metrics" />
+<meta name="twitter:card" content="summary" />
 
 
 
@@ -46,7 +49,7 @@
   </head>
 
   <body>
-    <div class="container template-reference-index">
+    <div class="container template-reference-topic">
       <header>
       <div class="navbar navbar-default navbar-fixed-top" role="navigation">
   <div class="container">
@@ -87,84 +90,45 @@
       </header>
 
 <div class="row">
-  <div class="contents col-md-9">
+  <div class="col-md-9 contents">
     <div class="page-header">
-      <h1>Reference</h1>
+    <h1>Calibration data</h1>
+    
+    <div class="hidden name"><code>refcal.Rd</code></div>
     </div>
 
-    <table class="ref-index">
+    <div class="ref-description">
+    
+    <p>Calibration data used to establish scoring limits for metrics</p>
+    
+    </div>
 
-    <colgroup>
-      
-      <col class="alias" />
-      <col class="title" />
-    </colgroup>
+    <pre class="usage"><span class='no'>refcal</span></pre>
+        
+    <h2 class="hasAnchor" id="format"><a class="anchor" href="#format"></a>Format</h2>
 
-    <tbody>
-      <tr>
-        <th colspan="2">
-          <h2 id="section-all-functions" class="hasAnchor"><a href="#section-all-functions" class="anchor"></a>All functions</h2>
-          <p class="section-desc"></p>
-        </th>
-      </tr>
-      <tr>
-        
-        <td>
-          <p><code><a href="chkinp.html">chkinp()</a></code> </p>
-        </td>
-        <td><p>Check input data for IPI</p></td>
-      </tr><tr>
-        
-        <td>
-          <p><code><a href="H_AqHab.html">H_AqHab</a></code> </p>
-        </td>
-        <td><p>Random forest model for H_AqHab</p></td>
-      </tr><tr>
-        
-        <td>
-          <p><code><a href="IPI.html">IPI()</a></code> </p>
-        </td>
-        <td><p>IPI scores</p></td>
-      </tr><tr>
-        
-        <td>
-          <p><code><a href="PCT_SAFN.html">PCT_SAFN</a></code> </p>
-        </td>
-        <td><p>Random forest model for percent sands and fines</p></td>
-      </tr><tr>
-        
-        <td>
-          <p><code><a href="phab.html">phab</a></code> </p>
-        </td>
-        <td><p>Example physical habitat data</p></td>
-      </tr><tr>
-        
-        <td>
-          <p><code><a href="refcal.html">refcal</a></code> </p>
-        </td>
-        <td><p>Calibration data</p></td>
-      </tr><tr>
-        
-        <td>
-          <p><code><a href="stations.html">stations</a></code> </p>
-        </td>
-        <td><p>Example station data</p></td>
-      </tr><tr>
-        
-        <td>
-          <p><code><a href="XCMG.html">XCMG</a></code> </p>
-        </td>
-        <td><p>Random forest model for XCMG</p></td>
-      </tr>
-    </tbody>
-    </table>
+    <p>A <code>data.frame</code> of PHAB variables at reference and stressed sites used to estimate scoring limits</p><dl class='dl-horizontal'>
+  <dt><code>Variable</code></dt><dd><p>chr</p></dd> name of the PHAB metric
+  <dt><code>StationCode</code></dt><dd><p>chr</p></dd> unique station identifier 
+  <dt><code>SampleID2</code></dt><dd><p>chr</p></dd> unique identifier of the sampling event
+  <dt><code>SiteSet</code></dt><dd><p>chr</p></dd> indicating reference or stressed site
+  <dt><code>Result</code></dt><dd><p>num</p></dd> resulting metric value
+  <dt><code>Predicted</code></dt><dd><p>num</p></dd> predicted metric value
+</dl>
+    
+
+    <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
+    <pre class="examples"><div class='input'><span class='fu'>data</span>(<span class='no'>refcal</span>)</div></pre>
   </div>
-
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">
     <h2>Contents</h2>
     <ul class="nav nav-pills nav-stacked">
-      <li><a href="#section-all-functions">All functions</a></li>
+      
+      <li><a href="#format">Format</a></li>
+      
+      <li><a href="#examples">Examples</a></li>
     </ul>
+
   </div>
 </div>
 
