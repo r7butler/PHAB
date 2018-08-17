@@ -30,4 +30,4 @@ Authors@R: c(
          email = "andy.rehn@wildlife.ca.gov"
     )
   )
-RoxygenNote: 6.0.1
+RoxygenNote: 6.1.0

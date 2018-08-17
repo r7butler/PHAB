@@ -17,7 +17,7 @@ The PHAB package contains materials to calculate an index of physical integrity 
 
 This tutorial assumes that the user is familiar with basic operations in the R programming language, such as data import, export, and manipulation. Although not required, we recommend using an integrated development environment for R, such as R-studio, which can be downloaded at [http://www.rstudio.com](http://www.rstudio.com). New users are encouraged to pursue training opportunities, such as those hosted by local R user groups. A list of such groups may be found here: http://blog.revolutionanalytics.com/local-r-groups.html. R training material developed by SCCWRP can also be found online: [https://sccwrp.github.io/SCCWRP_R_training/](https://sccwrp.github.io/SCCWRP_R_training/)
 
-## Installation
+# Installation
 
 Install the package as follows:
 
@@ -28,7 +28,7 @@ install_github('SCCWRP/PHAB')
 library(PHAB)
 ```
 
-## Basic usage
+# Basic usage
 
 The core function is `IPI` that requires station and phab data as input.
 
@@ -110,6 +110,20 @@ Values in the `Variable` column of the `phab` data indicate which PHAB metric wa
 Each metric serves a specific purpose in the PHAB package.  The `H_AqHab`, `PCT_SAFN`, `XCMG`, `Ev_FlowHab`, and `H_SubNat` metrics are used to assess habitat condition.  The `XSLOPE`, `XBKF_W`, and `PCT_RC` metrics are used as predictors or score modifiers for different components of the IPI.  Finally, the `XC`, `PCT_POOL`, `XFC_ALG`, and `PCT_RC` metrics provide information that is used for quality assurance checks for selected metrics and the overall IPI score.
 
 All required fields for the `stations` and `phab` data are case-sensitive and must be spelled correctly.  The order of the fields does not matter.  All `StationCode` values must be shared between the datasets.  As described below, the `IPI()` function automatically checks the format of the input data prior to estimating scores.
+
+## Detailed metric descriptions
+
+Five of the required PHAB metrics in the input data are used directly for scoring the IPI, whereas the remainder serve a supporting role as predictors or modifiers for different parts of the complete index.  Understanding what each of five core metrics describe about stream condition and how they vary with disturbance is critical for interpreting the index.  Below is a detailed description of each metric. 
+
+*Diversity of aquatic habitats* `H_AqHab` measures the relative quantity and variety of natural structures in the stream, such as cobble, large and small boulders, fallen trees, logs and branches, and undercut banks, available as refugia, feeding, or sites for spawning and nursery functions of aquatic macrofauna. A wide variety and/or abundance of submerged structures in the stream provides macroinvertebrates and fish with a large number of niches, thus increasing habitat diversity. When variety and abundance of cover decreases (e.g., due to hydromodification, increased sedimentation, or active stream clearing), habitat structure becomes monotonous, diversity decreases, and the potential for recovery following disturbance decreases. Snags and submerged logs—especially old logs that have remained in-place for several years--are among the most productive habitat structure for macroinvertebrate colonization and fish refugia in low-gradient streams. 
+
+*Percent sands and fines* `PCT_SAFN` measures the amount of small-grained sediment particles (i.e., <2 mm) that have accumulated in the stream bottom as a result of deposition. Deposition may result from soil disturbance in the catchment, landslides, and upstream bank erosion. Sediment deposition may cause the formation of islands or point bars, filling of runs and pools, and embeddedness of gravel, cobble, and boulders and snags, with larger substrate particles covered or sunken into the silt, sand, or mud of the stream bottom.  As habitat provided by cobbles or woody debris become embedded, and as interstitial spaces become inundated by sand or silt, the surface area available to macroinvertebrates and fish is decreased. High levels of sediment deposition are symptoms of an unstable and continually changing environment that becomes unsuitable for many organisms. Although human activity may deplete sands and fines (e.g., by upstream dam operations), and this depletion may harm aquatic life, the IPI only recognizes increases in this metric as a negative impact on habitat quality. Additionally, because channel armoring may lead to similar reductions in available habitat, the IPI includes concrete cover when evaluating this metric.
+
+*Diversity of natural substrate types* `H_SubNat` measures the diversity of natural substrate types, assessing how well multiple size classes (e.g., gravel, cobble and boulder particles) are represented. In a stream with high habitat quality for benthic macroinvertebrates, layers of cobble and gravel provide diversity of niche space. Occasional patches of fine sediment, root mats and bedrock also provide important habitat for burrowers or clingers, but do not dominate the streambed. Lack of substrate diversity, e.g., where >75% of the channel bottom is dominated by one particle size or hard-pan, or with highly compacted particles with no interstitial space, represent poor physical conditions. Riffles and runs with a diversity of particle sizes often provide the most stable habitat in many small, high-gradient streams. 
+
+*Evenness of flow microhabitats* `Ev_FlowHab` measures the evenness of riffles, pools, and other flow microhabitat types.  Optimal physical conditions include a relatively even mix of velocity/depth regimes, with regular alternation between riffles (fast-shallow), runs (fast-deep), glides (slow-shallow) and pools (slow-deep). Poor conditions occur when microhabitat dominates (usually glides, with pools and riffles absent). A stream that has a uniform flow regime will typically support far fewer types of organisms than a stream that has a variety of alternating flow regimes. Riffles in particular are a source of high-quality habitat and diverse fauna, and their regular occurrence along the length of a stream greatly enhances the diversity of the stream community. Pools are essential for many fish and amphibians.
+
+*Riparian vegetation cover* `XCMG` measures the amount of vegetative protection afforded to the stream bank and the near-stream portion of the riparian zone. The root systems of plants growing on stream banks help hold soil in place, thereby reducing the amount of erosion likely to occur. The vegetative zone also serves as a buffer to pollutants entering a stream from runoff and provides shading and habitat and nutrient input into the stream. Banks that have full, multi-layered, natural plant growth are better for fish and macroinvertebrates than are banks without vegetative protection or those shored up with concrete or riprap.  Vegetative removal and reduced riparian zones occur when roads, parking lots, fields, lawns, bare soil, riprap, or buildings are near the stream bank. Residential developments, urban centers, golf courses, and high grazing pressure from livestock are the common causes of anthropogenic degradation of the riparian zone. Even within protected areas, upstream hydromodification and invasion by non-native species can reduce the cover and quality of riparian zone vegetation.
 
 ## Using the IPI function
 
