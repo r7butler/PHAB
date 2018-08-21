@@ -27,9 +27,9 @@ This function checks the following:
 \item{}{No duplicate station rows in \code{\link{stations}}}
 \item{}{All stations in \code{\link{stations}} are in \code{\link{phab}} and the converse}
 \item{}{All required fields in \code{\link{stations}} and \code{\link{phab}}}
-\item{}{All required PHAB variables are present in the \code{variable} field of \code{\link{phab}} for each station and sample date}
+\item{}{All required PHAB variables are present in the \code{variable} field of \code{\link{phab}} for each station and sample date.  An exception is made for \code{XC}, \code{PCT_POOL}, and \code{XFC_ALG}, which are not necessary for the IPI but are used for optional quality assurance checks.}
 \item{}{No duplicate results for PHAB variables at each station and sample date}
-\item{}{All input variables for \code{\link{stations}} and \code{\link{phab}} are non-negative. The variables \code{XBKF_W}, \code{H_Aq_Hab}, \code{Ev_FlowHab}, and \code{H_SubNat} in \code{\link{phab}} must also be greater than zero.}
+\item{}{All input variables for \code{\link{stations}} and \code{\link{phab}} are non-negative, excluding elevation variables in \code{\link{stations}} which may be negative if below sea level (i.e., some locations in southeast California). The variables \code{XBKF_W} and \code{Ev_FlowHab} in \code{\link{phab}} must also be greater than zero.}
 }
 }
 \examples{
