@@ -134,10 +134,10 @@
 <p>The installation process may take a few seconds. Both the devtools and PHAB packages depend on other R packages, all of which are installed together. If an error is encountered during installation, an informative message is usually printed in the R console. This information can help troubleshoot the problem, such as identifying which dependent packages may need to be installed separately. Please contact SCCWRP staff if additional errors are encountered.</p>
 <p>After the package is successfully installed, you will be able to view the help file for the PHAB core function:</p>
 <div class="sourceCode" id="cb6"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb6-1" data-line-number="1">?IPI</a></code></pre></div>
-<div id="preparing-the-input-data" class="section level2">
+<div id="preparing-input-data" class="section level2">
 <h2 class="hasAnchor">
-<a href="#preparing-the-input-data" class="anchor"></a>Preparing the input data</h2>
-<p>The IPI is estimated using station and PHAB metric data as input. These data can be obtained from the state of California SWAMP reporting module. Sample data are provided with the PHAB package to demonstrate the required format. These data are loaded automatically once the package is installed and loaded. You can view the <code>stations</code> and <code>phab</code> example data from the R console:</p>
+<a href="#preparing-input-data" class="anchor"></a>Preparing input data</h2>
+<p>The IPI is estimated using station and PHAB metric data as input. Station GIS data can be obtained using the GIS insructions that accompany this document and PHAB metric data can be obtained from the state of California SWAMP reporting module. Sample data are provided with the PHAB package to demonstrate the required format and are loaded automatically once the package is installed and loaded. You can view the <code>stations</code> and <code>phab</code> example data from the R console:</p>
 <div class="sourceCode" id="cb7"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb7-1" data-line-number="1"><span class="kw">head</span>(stations)</a></code></pre></div>
 <pre><code>##   StationCode MAX_ELEV  AREA_SQKM ELEV_RANGE MEANP_WS  New_Long SITE_ELEV
 ## 1   105PS0107     2587 2002.90397    2050.96 882.4179 -123.0173    536.04
@@ -161,7 +161,7 @@
 ## 4   105PS0107  9/14/2009      Ev_AqHab   0.77          8
 ## 5   105PS0107  9/14/2009    Ev_FlowHab   0.85          4
 ## 6   105PS0107  9/14/2009     Ev_SubNat   0.75          8</code></pre>
-<p>The <code>stations</code> data includes site-specific information that are derived from geospatial analysis. These data are in wide format where one row corresponds to data for one site. The following fields are required:</p>
+<p>The <code>stations</code> data include site-specific information derived from geospatial analysis. These data are in wide format where one row corresponds to data for one site. The following fields are required:</p>
 <ul>
 <li>
 <code>StationCode</code> unique station identifier</li>
@@ -169,6 +169,8 @@
 <code>MAX_ELEV</code> maximum elevation in the watershed in meters</li>
 <li>
 <code>AREA_SQKM</code> watershed area in square kilometers</li>
+<li>
+<code>ELEV_RANGE</code> elevation range of the watershed in meters</li>
 <li>
 <code>MEANP_WS</code> mean phosphorus geology from the watershed</li>
 <li>
@@ -184,7 +186,7 @@
 <li>
 <code>PPT_00_09</code> average precipitation (2000 to 2009) at the sample point, in hundredths of millimeters</li>
 </ul>
-<p>The <code>phab</code> data include estimated physical habitat metrics that are compiled along with the <code>stations</code> data to get the IPI score. These data are in long format where multiple rows correspond to physical habitat metric values for a single site. The following fields are required:</p>
+<p>The <code>phab</code> data include calculated physical habitat metrics that are compiled along with the <code>stations</code> data to get the IPI score. These data are in long format where multiple rows correspond to physical habitat metric values for a single site. The following fields are required:</p>
 <ul>
 <li>
 <code>StationCode</code> unique station identifier</li>
@@ -198,7 +200,7 @@
 <code>Count_Calc</code> number of unique observations that were used to estimate the value in <code>Result</code>
 </li>
 </ul>
-<p>Values in the <code>Variable</code> column of the <code>phab</code> data indicate which PHAB metric was measured that corresponds to values in the <code>Result</code> column. The required PHAB metrics that should be provided for every site specified by <code>StationCode</code> are as follows:</p>
+<p>Values in the <code>Variable</code> column of the <code>phab</code> data indicate which PHAB metric was measured that corresponds to values in the <code>Result</code> column. The required PHAB metrics that should be provided for every unique sampling event specified by <code>StationCode</code> and <code>SampleDate</code> are as follows:</p>
 <ul>
 <li>
 <code>XSLOPE</code> mean slope of reach</li>
@@ -207,7 +209,7 @@
 <li>
 <code>H_AqHab</code> Shannon diversity of aquatic habitat types</li>
 <li>
-<code>PCT_SAFN</code> percent substrate particles smaller than sand (&lt;2 mm)</li>
+<code>PCT_SAFN</code> percent sand and fine (&lt;2 mm) substrate particles</li>
 <li>
 <code>XCMG</code> riparian cover sum of three layers</li>
 <li>
@@ -230,16 +232,16 @@
 <h2 class="hasAnchor">
 <a href="#detailed-metric-descriptions" class="anchor"></a>Detailed metric descriptions</h2>
 <p>Five of the required PHAB metrics in the input data are used directly for scoring the IPI, whereas the remainder serve a supporting role as predictors or modifiers for different parts of the complete index. Understanding what each of five core metrics describe about stream condition and how they vary with disturbance is critical for interpreting the index. Below is a detailed description of each metric.</p>
-<p><em>Diversity of aquatic habitats</em> <code>H_AqHab</code> measures the relative quantity and variety of natural structures in the stream, such as cobble, large and small boulders, fallen trees, logs and branches, and undercut banks, available as refugia, feeding, or sites for spawning and nursery functions of aquatic macrofauna. A wide variety and/or abundance of submerged structures in the stream provides macroinvertebrates and fish with a large number of niches, thus increasing habitat diversity. When variety and abundance of cover decreases (e.g., due to hydromodification, increased sedimentation, or active stream clearing), habitat structure becomes monotonous, diversity decreases, and the potential for recovery following disturbance decreases. Snags and submerged logs—especially old logs that have remained in-place for several years–are among the most productive habitat structure for macroinvertebrate colonization and fish refugia in low-gradient streams.</p>
-<p><em>Percent sands and fines</em> <code>PCT_SAFN</code> measures the amount of small-grained sediment particles (i.e., &lt;2 mm) that have accumulated in the stream bottom as a result of deposition. Deposition may result from soil disturbance in the catchment, landslides, and upstream bank erosion. Sediment deposition may cause the formation of islands or point bars, filling of runs and pools, and embeddedness of gravel, cobble, and boulders and snags, with larger substrate particles covered or sunken into the silt, sand, or mud of the stream bottom. As habitat provided by cobbles or woody debris become embedded, and as interstitial spaces become inundated by sand or silt, the surface area available to macroinvertebrates and fish is decreased. High levels of sediment deposition are symptoms of an unstable and continually changing environment that becomes unsuitable for many organisms. Although human activity may deplete sands and fines (e.g., by upstream dam operations), and this depletion may harm aquatic life, the IPI only recognizes increases in this metric as a negative impact on habitat quality. Additionally, because channel armoring may lead to similar reductions in available habitat, the IPI includes concrete cover when evaluating this metric.</p>
-<p><em>Diversity of natural substrate types</em> <code>H_SubNat</code> measures the diversity of natural substrate types, assessing how well multiple size classes (e.g., gravel, cobble and boulder particles) are represented. In a stream with high habitat quality for benthic macroinvertebrates, layers of cobble and gravel provide diversity of niche space. Occasional patches of fine sediment, root mats and bedrock also provide important habitat for burrowers or clingers, but do not dominate the streambed. Lack of substrate diversity, e.g., where &gt;75% of the channel bottom is dominated by one particle size or hard-pan, or with highly compacted particles with no interstitial space, represent poor physical conditions. Riffles and runs with a diversity of particle sizes often provide the most stable habitat in many small, high-gradient streams.</p>
-<p><em>Evenness of flow microhabitats</em> <code>Ev_FlowHab</code> measures the evenness of riffles, pools, and other flow microhabitat types. Optimal physical conditions include a relatively even mix of velocity/depth regimes, with regular alternation between riffles (fast-shallow), runs (fast-deep), glides (slow-shallow) and pools (slow-deep). Poor conditions occur when microhabitat dominates (usually glides, with pools and riffles absent). A stream that has a uniform flow regime will typically support far fewer types of organisms than a stream that has a variety of alternating flow regimes. Riffles in particular are a source of high-quality habitat and diverse fauna, and their regular occurrence along the length of a stream greatly enhances the diversity of the stream community. Pools are essential for many fish and amphibians.</p>
-<p><em>Riparian vegetation cover</em> <code>XCMG</code> measures the amount of vegetative protection afforded to the stream bank and the near-stream portion of the riparian zone. The root systems of plants growing on stream banks help hold soil in place, thereby reducing the amount of erosion likely to occur. The vegetative zone also serves as a buffer to pollutants entering a stream from runoff and provides shading and habitat and nutrient input into the stream. Banks that have full, multi-layered, natural plant growth are better for fish and macroinvertebrates than are banks without vegetative protection or those shored up with concrete or riprap. Vegetative removal and reduced riparian zones occur when roads, parking lots, fields, lawns, bare soil, riprap, or buildings are near the stream bank. Residential developments, urban centers, golf courses, and high grazing pressure from livestock are the common causes of anthropogenic degradation of the riparian zone. Even within protected areas, upstream hydromodification and invasion by non-native species can reduce the cover and quality of riparian zone vegetation.</p>
+<p><em>Shannon diversity of natural instream cover</em> <code>H_AqHab</code> measures the relative quantity and variety of natural structures in the stream, such as cobble, large and small boulders, fallen trees, logs and branches, and undercut banks available as refugia, or as sites for feeding or spawning and nursery functions of aquatic macrofauna. A wide variety and/or abundance of submerged structures in the stream provides macroinvertebrates and fish with a large number of niches, thus increasing habitat diversity. When variety and abundance of cover decreases (e.g., due to hydromodification, increased sedimentation, or active stream clearing), habitat structure becomes monotonous, diversity decreases, and the potential for recovery following disturbance decreases. Snags and submerged logs—especially old logs that have remained in-place for several years–are among the most productive habitat structure for macroinvertebrate colonization and fish refugia in low-gradient streams.</p>
+<p><em>Percent sand and fine substrate</em> <code>PCT_SAFN</code> measures the amount of small-grained sediment particles (i.e., &lt;2 mm) that have accumulated in the stream bottom as a result of deposition. Deposition may result from soil disturbance in the catchment, landslides, and bank erosion. Sediment deposition may cause the formation of islands or point bars, filling of runs and pools, and embeddedness of gravel, cobble, and boulders and snags, with larger substrate particles covered or sunken into the silt, sand, or mud of the stream bottom. As habitat provided by cobbles or woody debris becomes embedded, and as interstitial spaces become inundated by sand or silt, the surface area available to macroinvertebrates and fish is decreased. High levels of sediment deposition are symptoms of an unstable and continually changing environment that becomes unsuitable for many organisms. Although human activity may deplete sands and fines (e.g., by upstream dam operations), and this depletion may harm aquatic life, the IPI treats only increases in this metric as a negative impact on habitat quality, although a <em>post-hoc</em> “concentrate correction” was made whereby the meric percent concrete (<code>PCT_RC</code>) is added to <code>PCT_SAFN</code> before scoring.</p>
+<p><em>Shannon diversity of natural substrate types</em> <code>H_SubNat</code> measures the diversity of natural substrate types, assessing how well multiple size classes (e.g., gravel, cobble and boulder particles) are represented. In a stream with high habitat quality for benthic macroinvertebrates, layers of cobble and gravel provide diversity of niche space. Occasional patches of fine sediment, root mats and bedrock also provide important habitat for burrowers or clingers, but do not dominate the streambed. Lack of substrate diversity, e.g., where &gt;75% of the channel bottom is dominated by one particle size or hard-pan, or with highly compacted particles with no interstitial space, represents poor physical conditions. Riffles and runs with a diversity of particle sizes often provide the most stable habitat in many small, high-gradient streams.</p>
+<p><em>Evenness of flow habitat types</em> <code>Ev_FlowHab</code> measures the evenness of riffles, pools, and other flow microhabitat types. Optimal physical conditions include a relatively even mix of velocity/depth regimes, with regular alternation between riffles (fast-shallow), runs (fast-deep), glides (slow-shallow) and pools (slow-deep). Poor conditions occur when a single microhabitat dominates (usually glides, with pools and riffles absent). A stream that has a uniform flow regime will typically support far fewer types of organisms than a stream that has a variety of alternating flow regimes. Riffles in particular are a source of high-quality habitat and diverse fauna, and their regular occurrence along the length of a stream greatly enhances the diversity of the stream community. Pools are essential for many fish and amphibians.</p>
+<p><em>Riparian vegetation cover, sum of three layers</em> <code>XCMG</code> measures the amount of vegetative protection afforded to the stream bank and the near-stream portion of the riparian zone. The root systems of plants growing on stream banks help hold soil in place, thereby reducing the amount of erosion likely to occur. The vegetative zone also serves as a buffer to pollutants entering a stream from runoff and provides shading and habitat and nutrient input into the stream. Banks that have full, multi-layered, natural plant growth are better for fish and macroinvertebrates than are banks without vegetative protection or those shored up with concrete or riprap. Vegetative removal and reduced riparian zones occur when roads, parking lots, fields, lawns, bare soil, riprap, or buildings are near the stream bank. Residential developments, urban centers, golf courses, and high grazing pressure from livestock are the common causes of anthropogenic degradation of the riparian zone. Even in undeveloped areas, upstream hydromodification and invasion by non-native species can reduce the cover and quality of riparian zone vegetation.</p>
 </div>
 <div id="using-the-ipi-function" class="section level2">
 <h2 class="hasAnchor">
 <a href="#using-the-ipi-function" class="anchor"></a>Using the IPI function</h2>
-<p>The IPI score for a site is estimated from the station and PHAB data. The score is estimated automatically by the <code><a href="reference/IPI.html">IPI()</a></code> function in the package following several steps. First, reference expectations for a site are estimated for predictive metrics using the station data. Then, the observed data are compared to the reference expectations for the predictive metrics or to the mean values observed at reference sites for metrics that aren’t predicted. Metric scores are based on the deviations from those observed at reference and high-activity sites. The metric scores are then summed and standardized by the reference means to obtain the final IPI score.</p>
+<p>The IPI score for a site is estimated from the station and PHAB data. The score is estimated automatically by the <code><a href="reference/IPI.html">IPI()</a></code> function in the package following several steps. First, reference expectations for a site are estimated for predictive metrics using the station data. Then, observed data values are compared to reference expectations for predictive metrics and the differences between observed and predicted (i.e., metric residuals) are used for scoring. For metrics that are not predicted, raw metric values are used for scoring. Metric scores are based on the upper and lower percentiles of either metric residuals or raw metric values observed at reference and high-activity sites. The metric scores are then summed and standardized (i.e., divided) by the mean sum of scores at reference sites to obtain the final IPI score.</p>
 <p>The <code><a href="reference/IPI.html">IPI()</a></code> function can be used on station and PHAB data that are correctly formatted as shown above. The <code>stations</code> and <code>phab</code> example data are in the correct format and are loaded automatically with the PHAB package. These data are used here to demonstrate use of the <code><a href="reference/IPI.html">IPI()</a></code> function.</p>
 <div class="sourceCode" id="cb11"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb11-1" data-line-number="1"><span class="kw"><a href="reference/IPI.html">IPI</a></span>(stations, phab)</a></code></pre></div>
 <pre><code>##   StationCode SampleDate       PHAB_SampleID  IPI IPI_percentile
@@ -294,23 +296,23 @@
 <li>
 <code>Ev_FlowHab_score</code> IPI score for evenness of flow habitat types</li>
 <li>
-<code>H_AqHab</code> Shannon diversity of aquatic habitat types, from the raw PHAB metric</li>
+<code>H_AqHab</code> Shannon diversity of natural instream cover types, from the raw PHAB metric</li>
 <li>
-<code>H_AqHab_pred</code> predicted Shannon diversity of aquatic habitat types</li>
+<code>H_AqHab_pred</code> predicted Shannon diversity of natural instream cover types</li>
 <li>
-<code>H_AqHab_score</code> scored Shannon diversity of aquatic habitat types</li>
+<code>H_AqHab_score</code> scored Shannon diversity of natural instream cover types</li>
 <li>
 <code>H_SubNat</code> Shannon Diversity of natural substrate types, from the raw PHAB metric</li>
 <li>
 <code>H_SubNat_score</code> scored Shannon diversity of natural substrate types</li>
 <li>
-<code>PCT_SAFN</code> percent substrates smaller than sand (&lt;2 mm), from the raw PHAB metric</li>
+<code>PCT_SAFN</code> percent sand and fine substrate, from the raw PHAB metric</li>
 <li>
-<code>PCT_RC</code> percent concrete/asphalt, from the raw PHAB metric and is combined with <code>PCT_SAFN</code> to provide an overall estimate of substrate</li>
+<code>PCT_RC</code> percent concrete/asphalt, from the raw PHAB metric and is combined with <code>PCT_SAFN</code> to provide an overall estimate of substrate with poor suitability for macrofauna</li>
 <li>
-<code>PCT_SAFN_pred</code> predicted percent substrates smaller than sand (&lt;2 mm)</li>
+<code>PCT_SAFN_pred</code> predicted percent sand and fine substrate</li>
 <li>
-<code>PCT_SAFN_score</code> scored percent substrates smaller than sand (&lt;2 mm), includes substrate from <code>PCT_RC</code>
+<code>PCT_SAFN_score</code> scored percent sand and fine substrate, includes <code>PCT_RC</code>
 </li>
 <li>
 <code>XCMG</code> riparian cover as sum of three layers, from the raw PHAB metric</li>
@@ -327,23 +329,23 @@
 <li>
 <code>H_SubNat_qa</code> quality assurance for Shannon diversity of natural substrate types</li>
 <li>
-<code>PCT_SAFN_qa</code> quality assurance for percent substrates smaller than sand (&lt;2 mm)</li>
+<code>PCT_SAFN_qa</code> quality assurance for percent sand and fine substrate</li>
 <li>
 <code>XCMG_qa</code> quality assurance for riparian cover as sum of three layers</li>
 </ul>
-<p>Metrics are included in the output as observed PHAB metrics, predicted metrics, and scored metrics. The observed PHAB metrics are returned as-is from the input data. Some PHAB metrics include a predicted column that shows the modelled metric value based on the observed conditions at a site. Scored PHAB metrics are based on the difference between the observed and predicted scores for metrics with predictions, or estimated from the observed metric using an empirical formula for those without predicted values.</p>
-<p>The last five columns include quality assurance information for the IPI score and select metrics. QA values for metrics less than one indicate less quality assurance, usually resulting from less than the recommended locations being used at a sample site to assess a metric. The QA value for the IPI is based on the lowest score among all metrics. These columns are included by default and can be removed from the output by using the <code>qa = FALSE</code> argument.</p>
+<p>Metrics are included in the output as observed PHAB metrics, predicted metrics (where applicable), and scored metrics. Observed PHAB metrics are returned as-is from the input data. Some PHAB metrics include a predicted column that shows the modelled metric value based on the environmental setting at a site. Scored PHAB metrics are obtained following the description above.</p>
+<p>The last five columns include quality assurance information for the IPI score and select metrics. QA values less than one indicate less quality assurance, usually resulting from metric values being calculated from fewer measurements from a sample than specified by field protocols. The QA value for the IPI is based on the lowest score among all metrics. These columns are included by default and can be removed from the output by using the <code>qa = FALSE</code> argument.</p>
 <div class="sourceCode" id="cb13"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb13-1" data-line-number="1"><span class="kw"><a href="reference/IPI.html">IPI</a></span>(stations, phab, <span class="dt">qa =</span> <span class="ot">FALSE</span>)</a></code></pre></div>
 </div>
 <div id="interpreting-ipi-scores" class="section level2">
 <h2 class="hasAnchor">
 <a href="#interpreting-ipi-scores" class="anchor"></a>Interpreting IPI scores</h2>
-<p>Higher IPI scores returned by the <code><a href="reference/IPI.html">IPI()</a></code> function indicate better (i.e., more reference-like) physical habitat integrity at a station. IPI scores near 1 represent locations with conditions similar to reference sites. All metric scores are weighted equally to determine the overall IPI score. The individual scored PHAB metrics vary from zero to one, with values closer to one indicating conditions that are likely to represent intact physical habitat. For the observed PHAB metrics, all are expected to decrease under degraded physical conditions, except PCT_SAFN which is expected to increase.</p>
+<p>The IPI was calibrated during its development so that the mean score of reference sites is 1; IPI scores near 1 represent locations with conditions similar to reference sites. Scores that approach 0 indicate great departure from reference condition and degradation of physical condition. Scores &gt; 1 can be interpreted to indicate greater physical complexity than predicted for a site given its natural environmental setting. All metric scores are weighted equally to determine the overall IPI score. For observed and scored PHAB metrics, all are expected to decrease under degraded physical conditions, except PCT_SAFN which is expected to increase.</p>
 </div>
 <div id="calibration-data" class="section level2">
 <h2 class="hasAnchor">
 <a href="#calibration-data" class="anchor"></a>Calibration data</h2>
-<p>An additional data file is available from the PHAB package that shows calibration data for scoring the IPI metrics. This file is called <code>refcal</code> and includes observed and predicted scores at reference and stressed sites for the five PHAB metrics. Metrics are scored based on deviation from the 5th and 95th percentile of scores at reference or calibration sites. The <code>refcal</code> dataset includes observations at these sites that were used to identify the percentile cutoffs for estimating metric scores.</p>
+<p>An additional data file is available within the PHAB package that shows calibration data for scoring the IPI metrics. This file is called <code>refcal</code> and includes observed and predicted scores at reference and high-activity (or “stressed”) sites for the five PHAB metrics. Metrics are scored based on deviation from the 5th and 95th percentile of scores at reference or calibration sites. The <code>refcal</code> dataset includes observations at these sites that were used to identify percentile cutoffs for estimating metric scores.</p>
 <div class="sourceCode" id="cb14"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb14-1" data-line-number="1"><span class="kw">head</span>(refcal)</a></code></pre></div>
 <pre><code>##     Variable StationCode      SampleID2   SiteSet Result Predicted
 ## 1 Ev_FlowHab   000CAT228 000CAT22840400    RefCal   0.77 0.6498149
@@ -360,7 +362,7 @@
 <li>
 <code>SampleIDs</code> unique identifier of the sampling event</li>
 <li>
-<code>SiteSet</code> indicating if a site was refernece or stressed</li>
+<code>SiteSet</code> indicating if a site was reference or stressed</li>
 <li>
 <code>Result</code> resulting metric value</li>
 <li>
@@ -370,14 +372,14 @@
 <div id="error-checks-for-input-data" class="section level2">
 <h2 class="hasAnchor">
 <a href="#error-checks-for-input-data" class="anchor"></a>Error checks for input data</h2>
-<p>The <code><a href="reference/IPI.html">IPI()</a></code> function will evaluate both the <code>stations</code> and <code>phab</code> input datasets for the correct format before estimating IPI scores. The scores will not be calculated if any errors are encountered. The following checks are made:</p>
+<p>The <code><a href="reference/IPI.html">IPI()</a></code> function will evaluate both the <code>stations</code> and <code>phab</code> input datasets for correct format before estimating IPI scores. IPI scores will not be calculated if any errors are encountered. The following checks are made:</p>
 <ul>
 <li>No duplicate station codes in <code>stations</code>. That is, input data have one row per station.</li>
 <li>All station codes in <code>stations</code> are in <code>phab</code>, and vice-versa</li>
 <li>All required fields are present in <code>stations</code> and <code>phab</code> (see above)</li>
-<li>All required PHAB metrics are present in the <code>variable</code> field of <code>phab</code> for each station and sample date (see above)</li>
+<li>All required PHAB metrics are present in the <code>variable</code> field of <code>phab</code> for each station and sample date (see above). An exception is made for <code>XC</code>, <code>PCT_POOL</code>, and <code>XFC_ALG</code>, which are not necessary for the IPI but are used for optional quality assurance checks.</li>
 <li>No duplicate results for PHAB variables at each station and sample date. That is, one row per station, date, and metric.</li>
-<li>All input variables for <code>stations</code> and <code>phab</code> are non-negative. Moreover, the variables <code>XBKF_W</code>, <code>H_Aq_Hab</code>, <code>Ev_FlowHab</code>, and <code>H_SubNat</code> in <code>phab</code> must also be greater than zero.</li>
+<li>All input variables for <code>stations</code> and <code>phab</code> are non-negative, excluding elevation variables in <code>stations</code> which may be negative if below sea level (i.e., some locations in southeast California). Moreover, the variables <code>XBKF_W</code> and <code>Ev_FlowHab</code> in <code>phab</code> must also be greater than zero.</li>
 </ul>
 <p>The <code><a href="reference/IPI.html">IPI()</a></code> function will print informative messages to the R console if any of these errors are encountered. It is the responsibility of the analyst to correct any errors in the raw data before proceeding.</p>
 </div>

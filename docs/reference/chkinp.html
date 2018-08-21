@@ -136,9 +136,9 @@
 <dt></dt><dd><p>No duplicate station rows in <code><a href='stations.html'>stations</a></code></p></dd>
 <dt></dt><dd><p>All stations in <code><a href='stations.html'>stations</a></code> are in <code><a href='phab.html'>phab</a></code> and the converse</p></dd>
 <dt></dt><dd><p>All required fields in <code><a href='stations.html'>stations</a></code> and <code><a href='phab.html'>phab</a></code></p></dd>
-<dt></dt><dd><p>All required PHAB variables are present in the <code>variable</code> field of <code><a href='phab.html'>phab</a></code> for each station and sample date</p></dd>
+<dt></dt><dd><p>All required PHAB variables are present in the <code>variable</code> field of <code><a href='phab.html'>phab</a></code> for each station and sample date.  An exception is made for <code>XC</code>, <code>PCT_POOL</code>, and <code>XFC_ALG</code>, which are not necessary for the IPI but are used for optional quality assurance checks.</p></dd>
 <dt></dt><dd><p>No duplicate results for PHAB variables at each station and sample date</p></dd>
-<dt></dt><dd><p>All input variables for <code><a href='stations.html'>stations</a></code> and <code><a href='phab.html'>phab</a></code> are non-negative. The variables <code>XBKF_W</code>, <code>H_Aq_Hab</code>, <code>Ev_FlowHab</code>, and <code>H_SubNat</code> in <code><a href='phab.html'>phab</a></code> must also be greater than zero.</p></dd>
+<dt></dt><dd><p>All input variables for <code><a href='stations.html'>stations</a></code> and <code><a href='phab.html'>phab</a></code> are non-negative, excluding elevation variables in <code><a href='stations.html'>stations</a></code> which may be negative if below sea level (i.e., some locations in southeast California). The variables <code>XBKF_W</code> and <code>Ev_FlowHab</code> in <code><a href='phab.html'>phab</a></code> must also be greater than zero.</p></dd>
 </dl>
     
 
