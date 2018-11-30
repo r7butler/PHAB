@@ -22,6 +22,30 @@
 #' @examples
 #' IPI(stations, phab)
 IPI <- function(stations, phab, qa = TRUE, allerr = TRUE){
+    # explicitly declare certain fields to be what they need to be. For sake of python compatibility.
+    phab <- phab %>% 
+    dplyr::mutate(
+      StationCode = as.character(StationCode),
+      SampleDate = as.POSIXct(SampleDate),
+      Variable = as.character(Variable),
+      Result = as.numeric(Result),
+      Count_Calc = as.numeric(Count_Calc)
+      )
+  
+    stations <- stations %>% 
+    dplyr::mutate(
+      StationCode = as.character(StationCode),
+      MAX_ELEV = as.integer(MAX_ELEV),
+      AREA_SQKM = as.numeric(AREA_SQKM),
+      ELEV_RANGE = as.integer(ELEV_RANGE),
+      MEANP_WS = as.numeric(MEANP_WS),
+      New_Long = as.numeric(New_Long),
+      SITE_ELEV = as.integer(SITE_ELEV),
+      KFCT_AVE = as.numeric(KFCT_AVE),
+      New_Lat = as.numeric(New_Lat),
+      MINP_WS = as.numeric(MINP_WS),
+      PPT_00_09 = as.numeric(PPT_00_09)
+      )
   
   # sanity checks
   chkinp(stations, phab, qa = qa, allerr = allerr)
