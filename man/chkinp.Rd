@@ -4,7 +4,7 @@
 \alias{chkinp}
 \title{Check input data for IPI}
 \usage{
-chkinp(stations, phab, qa = TRUE, allerr = TRUE)
+chkinp(stations, phab, qa = TRUE, allerr = TRUE, log = FALSE)
 }
 \arguments{
 \item{stations}{\code{data.frame} of input station data}
@@ -14,6 +14,8 @@ chkinp(stations, phab, qa = TRUE, allerr = TRUE)
 \item{qa}{logical value passed from \code{\link{IPI}} to suppress error checks on relevant metrics}
 
 \item{allerr}{logical indicating if all errors are returned or the first encountered}
+
+\item{log}{logical indicating if errors are printed to log in the workign directory, applies only if \code{allerr = TRUE}}
 }
 \value{
 An error message is returned if the input data are not correctly formatted. If a dataset has multiple errors, only the first is returned.

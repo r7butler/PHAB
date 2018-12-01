@@ -6,6 +6,8 @@
 #' @param phab \code{data.frame} of input physical habitat data
 #' @param qa logical value passed from \code{\link{IPI}} to suppress error checks on relevant metrics
 #' @param allerr logical indicating if all errors are returned or the first encountered
+#' @param log logical indicating if errors are printed to log in the workign directory, applies only if \code{allerr = TRUE}
+#'
 #' 
 #' @return An error message is returned if the input data are not correctly formatted. If a dataset has multiple errors, only the first is returned.
 #' 
@@ -29,7 +31,7 @@
 #'
 #' @examples
 #' chkinp(stations, phab)
-chkinp <- function(stations, phab, qa = TRUE, allerr = TRUE){
+chkinp <- function(stations, phab, qa = TRUE, allerr = TRUE, log = FALSE){
 
   errs <- list()
   
@@ -237,6 +239,8 @@ chkinp <- function(stations, phab, qa = TRUE, allerr = TRUE){
     errs <- do.call('c', errs) %>% 
       paste(collapse = '\n\n') %>% 
       paste0('\n\n', .)
+    
+    if(log) writeLines(errs, 'log.txt')
     stop(errs, call. = FALSE)
     
   }
