@@ -26,7 +26,7 @@ IPI <- function(stations, phab, qa = TRUE, allerr = TRUE){
     phab <- phab %>% 
     dplyr::mutate(
       StationCode = as.character(StationCode),
-      SampleDate = as.POSIXct(as.character(SampleDate)),
+      SampleDate = as.character(SampleDate),
       Variable = as.character(Variable),
       Result = as.numeric(Result),
       Count_Calc = as.numeric(Count_Calc)
