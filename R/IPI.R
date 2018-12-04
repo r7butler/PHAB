@@ -29,7 +29,7 @@ IPI <- function(stations, phab, qa = TRUE, allerr = TRUE){
       SampleDate = as.character(SampleDate),
       Variable = as.character(Variable),
       Result = as.numeric(Result),
-      Count_Calc = as.numeric(Count_Calc)
+      Count_Calc = as.integer(Count_Calc)
       )
   
     stations <- stations %>% 
@@ -37,10 +37,10 @@ IPI <- function(stations, phab, qa = TRUE, allerr = TRUE){
       StationCode = as.character(StationCode),
       MAX_ELEV = as.integer(MAX_ELEV),
       AREA_SQKM = as.numeric(AREA_SQKM),
-      ELEV_RANGE = as.integer(ELEV_RANGE),
+      ELEV_RANGE = as.numeric(ELEV_RANGE),
       MEANP_WS = as.numeric(MEANP_WS),
       New_Long = as.numeric(New_Long),
-      SITE_ELEV = as.integer(SITE_ELEV),
+      SITE_ELEV = as.numeric(SITE_ELEV),
       KFCT_AVE = as.numeric(KFCT_AVE),
       New_Lat = as.numeric(New_Lat),
       MINP_WS = as.numeric(MINP_WS),
