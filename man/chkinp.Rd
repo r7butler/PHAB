@@ -31,7 +31,7 @@ This function checks the following:
 \item{}{All required fields in \code{\link{stations}} and \code{\link{phab}}}
 \item{}{All required PHAB variables are present in the \code{variable} field of \code{\link{phab}} for each station and sample date.  An exception is made for \code{XC}, \code{PCT_POOL}, and \code{XFC_ALG}, which are not necessary for the IPI but are used for optional quality assurance checks.}
 \item{}{No duplicate results for PHAB variables at each station and sample date}
-\item{}{All input variables for \code{\link{stations}} and \code{\link{phab}} are non-negative, excluding elevation variables in \code{\link{stations}} which may be negative if below sea level (i.e., some locations in southeast California). The variables \code{XBKF_W} and \code{Ev_FlowHab} in \code{\link{phab}} must also be greater than zero.}
+\item{}{All input variables for \code{\link{stations}} and \code{\link{phab}} are non-negative, excluding elevation variables in \code{\link{stations}} which may be negative if below sea level (i.e., some locations in southeast California). The variable \code{XBKF_W} in \code{\link{phab}} must also be greater than zero.}
 }
 }
 \examples{
