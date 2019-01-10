@@ -76,7 +76,7 @@ IPI <- function(stations, phab, qa = TRUE, allerr = TRUE){
 
   #Assemble phab output
   phab.scores<-dcast(phab[which(phab$Variable %in% c(sel.metrics,"PCT_RC")),],StationCode+SampleDate+PHAB_SampleID~Variable, value.var = "Result")
-  
+  print(phab.scores)
   #Ev_FlowHab: Unmodeled decreaser
   phab.scores$Ev_FlowHab_pred<-NA
   phab.scores$Ev_FlowHab_score<-  (phab.scores$Ev_FlowHab - 0.025)/(0.95  - 0.025)
