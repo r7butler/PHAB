@@ -123,8 +123,7 @@ chkinp <- function(stations, phab, qa = TRUE, allerr = TRUE){
     ) %>% 
     filter(map(misvar, ~ length(.x) > 0) %>% unlist)
   
-  print(head(phab))
-  print(chk)
+ 
   
   if(nrow(chk) > 0){
     
