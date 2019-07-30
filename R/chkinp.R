@@ -96,7 +96,7 @@ chkinp <- function(stations, phab, qa = TRUE, allerr = TRUE){
   
   # check phab fields are present
   
-  phafld <- c('StationCode', 'SampleDate', 'Variable', 'Result', 'Count_Calc')
+  phafld <- c('StationCode', 'SampleDate', 'SampleAgencyCode', 'Variable', 'Result', 'Count_Calc')
   chk <- phafld %in% names(phab)
   if(any(!chk)){
     
@@ -122,6 +122,9 @@ chkinp <- function(stations, phab, qa = TRUE, allerr = TRUE){
       misvar = map(misvar, ~ setdiff(phavar, .x))
     ) %>% 
     filter(map(misvar, ~ length(.x) > 0) %>% unlist)
+  
+  print(head(phab))
+  print(chk)
   
   if(nrow(chk) > 0){
     
