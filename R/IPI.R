@@ -27,6 +27,7 @@ IPI <- function(stations, phab, qa = TRUE, allerr = TRUE){
     dplyr::mutate(
       StationCode = as.character(StationCode),
       SampleDate = as.character(SampleDate),
+      SampleAgencyCode = as.character(SampleAgencyCode),
       Variable = as.character(Variable),
       Result = as.numeric(Result),
       Count_Calc = as.integer(Count_Calc)
@@ -51,7 +52,7 @@ IPI <- function(stations, phab, qa = TRUE, allerr = TRUE){
   chkinp(stations, phab, qa = qa, allerr = allerr)
  
   # append unique SampleID
-  phab$PHAB_SampleID<-paste(phab$StationCode, phab$SampleDate, sep="_")
+  phab$PHAB_SampleID<-paste(phab$StationCode, phab$SampleDate, phab$SampleAgencyCode, sep="_")
   
   # sel.metrics
   sel.metrics<-c("Ev_FlowHab", "H_AqHab", "XCMG", "H_SubNat", "PCT_SAFN")
@@ -59,7 +60,7 @@ IPI <- function(stations, phab, qa = TRUE, allerr = TRUE){
   # subset phab by required metrics
   all.req.phab<-c("XSLOPE","XBKF_W", "H_AqHab","PCT_SAFN","XCMG","Ev_FlowHab","H_SubNat","XC",
                   "PCT_POOL","XFC_ALG","PCT_RC")
-  phab<-phab[which(phab$Variable %in% all.req.phab),c("StationCode","SampleDate","PHAB_SampleID", "Variable","Result","Count_Calc")]
+  phab<-phab[which(phab$Variable %in% all.req.phab),c("StationCode","SampleDate", "SampleAgencyCode", "PHAB_SampleID", "Variable","Result","Count_Calc")]
   
   # What are the required predictors?
   preds.req<-unique(c(row.names(H_AqHab$importance),row.names(XCMG$importance),row.names(PCT_SAFN$importance)))
@@ -68,14 +69,14 @@ IPI <- function(stations, phab, qa = TRUE, allerr = TRUE){
   
   # Field predictors
   phab.preds<-phab[which(phab$Variable %in% field.preds.req),]
-  phab.preds<-dcast(phab.preds, StationCode+SampleDate+PHAB_SampleID~Variable, value.var = "Result")
+  phab.preds<-dcast(phab.preds, StationCode+SampleDate+SampleAgencyCode+PHAB_SampleID~Variable, value.var = "Result")
   
   ##########
   #Assemble predictor matrix
   preds<-merge(phab.preds, unique(stations[c("StationCode",gis.preds.req)]))
 
   #Assemble phab output
-  phab.scores<-dcast(phab[which(phab$Variable %in% c(sel.metrics,"PCT_RC")),],StationCode+SampleDate+PHAB_SampleID~Variable, value.var = "Result")
+  phab.scores<-dcast(phab[which(phab$Variable %in% c(sel.metrics,"PCT_RC")),],StationCode+SampleDate+SampleAgencyCode+PHAB_SampleID~Variable, value.var = "Result")
   print(head(phab.scores))
   print(str(phab.scores))
   #Ev_FlowHab: Unmodeled decreaser
@@ -121,12 +122,12 @@ IPI <- function(stations, phab, qa = TRUE, allerr = TRUE){
   
   # round results to two decimals
   phab.scores <- phab.scores %>% 
-    gather('var', 'val', -StationCode, -SampleDate, -PHAB_SampleID) %>% 
+    gather('var', 'val', -StationCode, -SampleDate, -SampleAgencyCode, -PHAB_SampleID) %>% 
     mutate(val = round(val, 2)) %>% 
     spread(var, val)
 
   #Combine metrics and qa in a single report, with columns in a better order
-  report<- phab.scores[,c("StationCode","SampleDate","PHAB_SampleID",
+  report<- phab.scores[,c("StationCode","SampleDate","SampleAgencyCode","PHAB_SampleID",
                           "IPI","IPI_percentile",
                           "Ev_FlowHab","Ev_FlowHab_score",
                           "H_AqHab","H_AqHab_pred","H_AqHab_score",
