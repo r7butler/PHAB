@@ -113,9 +113,9 @@ chkinp <- function(stations, phab, qa = TRUE, allerr = TRUE){
   
   phavar <- c('XSLOPE', 'XBKF_W', 'H_AqHab', 'PCT_SAFN', 'XCMG', 'Ev_FlowHab', 'H_SubNat', 'PCT_RC')
   chk <- phab %>% 
-    select(StationCode, SampleDate, Variable) %>% 
+    select(StationCode, SampleDate, SampleAgencyCode, Variable) %>% 
     unique %>% 
-    group_by(StationCode, SampleDate) %>%
+    group_by(StationCode, SampleDate, SampleAgencyCode) %>%
     nest %>% 
     mutate(
       misvar = map(data, ~ phavar[phavar %in% .x$Variable]),
@@ -125,7 +125,7 @@ chkinp <- function(stations, phab, qa = TRUE, allerr = TRUE){
   
   if(nrow(chk) > 0){
     
-    stadts <- paste0(chk$StationCode, ', ', chk$SampleDate, ': ') 
+    stadts <- paste0(chk$StationCode, ', ', chk$SampleDate, ', ', chk$SampleAgencyCode, ': ') 
     misvar <- map(chk$misvar, ~ paste(.x, collapse = ', ')) %>% unlist
     misall <- paste(stadts, misvar) %>% paste(collapse = '\n')
     
@@ -138,12 +138,12 @@ chkinp <- function(stations, phab, qa = TRUE, allerr = TRUE){
   }
   
   ##
-  # check for duplicate phab variables by station, sample date
+  # check for duplicate phab variables by station, sample date, sampleagencycode
   
   chk <- phab %>% 
-    select(StationCode, SampleDate, Variable) %>% 
+    select(StationCode, SampleDate, SampleAgencyCode, Variable) %>% 
     unique %>% 
-    group_by(StationCode, SampleDate) %>%
+    group_by(StationCode, SampleDate, SampleAgencyCode) %>%
     nest %>% 
     mutate(
       dupvar = map(data, ~ .x$Variable[duplicated(.x$Variable)])
@@ -152,7 +152,7 @@ chkinp <- function(stations, phab, qa = TRUE, allerr = TRUE){
   
   if(nrow(chk) > 0){
     
-    stadts <- paste0(chk$StationCode, ', ', chk$SampleDate, ': ') 
+    stadts <- paste0(chk$StationCode, ', ', chk$SampleDate, ', ', chk$SampleAgencyCode, ': ') 
     dupvar <- map(chk$dupvar, ~ paste(.x, collapse = ', ')) %>% unlist
     dupall <- paste(stadts, dupvar) %>% paste(collapse = '\n\n')
 
