@@ -4,7 +4,7 @@
 \alias{IPI}
 \title{IPI scores}
 \usage{
-IPI(stations, phab, qa = TRUE, allerr = TRUE)
+IPI(stations, phab, qa = TRUE, allerr = TRUE, log = FALSE)
 }
 \arguments{
 \item{stations}{\code{data.frame} of input station data}
@@ -14,6 +14,8 @@ IPI(stations, phab, qa = TRUE, allerr = TRUE)
 \item{qa}{logical indicating of quality assurance columns are appended to the output}
 
 \item{allerr}{logical indicating if all errors are returned or the first encountered}
+
+\item{log}{logical indicating if errors are printed to log in the workign directory, applies only if \code{allerr = TRUE}}
 }
 \value{
 A results \code{data.frame} of IPI and metric scores, quality assurance results are returned if \code{qa = TRUE} (default)

@@ -61,7 +61,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">PHAB</a>
-        <span class="label label-default" data-toggle="tooltip" data-placement="bottom" title="Released package">0.0.1.9004</span>
+        <span class="label label-default" data-toggle="tooltip" data-placement="bottom" title="Released package">0.0.1.9007</span>
       </span>
     </div>
 
@@ -103,7 +103,7 @@
     
     </div>
 
-    <pre class="usage"><span class='fu'>IPI</span>(<span class='no'>stations</span>, <span class='no'>phab</span>, <span class='kw'>qa</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>, <span class='kw'>allerr</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>)</pre>
+    <pre class="usage"><span class='fu'>IPI</span>(<span class='no'>stations</span>, <span class='no'>phab</span>, <span class='kw'>qa</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>, <span class='kw'>allerr</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>, <span class='kw'>log</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>)</pre>
     
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
@@ -123,6 +123,10 @@
     <tr>
       <th>allerr</th>
       <td><p>logical indicating if all errors are returned or the first encountered</p></td>
+    </tr>
+    <tr>
+      <th>log</th>
+      <td><p>logical indicating if errors are printed to log in the workign directory, applies only if <code>allerr = TRUE</code></p></td>
     </tr>
     </table>
     

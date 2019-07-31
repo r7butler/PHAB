@@ -61,7 +61,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">PHAB</a>
-        <span class="label label-default" data-toggle="tooltip" data-placement="bottom" title="Released package">0.0.1.9004</span>
+        <span class="label label-default" data-toggle="tooltip" data-placement="bottom" title="Released package">0.0.1.9007</span>
       </span>
     </div>
 
@@ -103,7 +103,7 @@
     
     </div>
 
-    <pre class="usage"><span class='fu'>chkinp</span>(<span class='no'>stations</span>, <span class='no'>phab</span>, <span class='kw'>qa</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>, <span class='kw'>allerr</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>)</pre>
+    <pre class="usage"><span class='fu'>chkinp</span>(<span class='no'>stations</span>, <span class='no'>phab</span>, <span class='kw'>qa</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>, <span class='kw'>allerr</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>, <span class='kw'>log</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>)</pre>
     
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
@@ -124,6 +124,10 @@
       <th>allerr</th>
       <td><p>logical indicating if all errors are returned or the first encountered</p></td>
     </tr>
+    <tr>
+      <th>log</th>
+      <td><p>logical indicating if errors are printed to log in the workign directory, applies only if <code>allerr = TRUE</code></p></td>
+    </tr>
     </table>
     
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
@@ -138,7 +142,7 @@
 <dt></dt><dd><p>All required fields in <code><a href='stations.html'>stations</a></code> and <code><a href='phab.html'>phab</a></code></p></dd>
 <dt></dt><dd><p>All required PHAB variables are present in the <code>variable</code> field of <code><a href='phab.html'>phab</a></code> for each station and sample date.  An exception is made for <code>XC</code>, <code>PCT_POOL</code>, and <code>XFC_ALG</code>, which are not necessary for the IPI but are used for optional quality assurance checks.</p></dd>
 <dt></dt><dd><p>No duplicate results for PHAB variables at each station and sample date</p></dd>
-<dt></dt><dd><p>All input variables for <code><a href='stations.html'>stations</a></code> and <code><a href='phab.html'>phab</a></code> are non-negative, excluding elevation variables in <code><a href='stations.html'>stations</a></code> which may be negative if below sea level (i.e., some locations in southeast California). The variables <code>XBKF_W</code> and <code>Ev_FlowHab</code> in <code><a href='phab.html'>phab</a></code> must also be greater than zero.</p></dd>
+<dt></dt><dd><p>All input variables for <code><a href='stations.html'>stations</a></code> and <code><a href='phab.html'>phab</a></code> are non-negative, excluding elevation variables in <code><a href='stations.html'>stations</a></code> which may be negative if below sea level (i.e., some locations in southeast California). The variable <code>XBKF_W</code> in <code><a href='phab.html'>phab</a></code> must also be greater than zero.</p></dd>
 </dl>
     
 

@@ -6,6 +6,8 @@
 #' @param phab \code{data.frame} of input physical habitat data
 #' @param qa logical value passed from \code{\link{IPI}} to suppress error checks on relevant metrics
 #' @param allerr logical indicating if all errors are returned or the first encountered
+#' @param log logical indicating if errors are printed to log in the workign directory, applies only if \code{allerr = TRUE}
+#'
 #' 
 #' @return An error message is returned if the input data are not correctly formatted. If a dataset has multiple errors, only the first is returned.
 #' 
@@ -22,14 +24,14 @@
 #' \item{}{All required fields in \code{\link{stations}} and \code{\link{phab}}}
 #' \item{}{All required PHAB variables are present in the \code{variable} field of \code{\link{phab}} for each station and sample date.  An exception is made for \code{XC}, \code{PCT_POOL}, and \code{XFC_ALG}, which are not necessary for the IPI but are used for optional quality assurance checks.}
 #' \item{}{No duplicate results for PHAB variables at each station and sample date}
-#' \item{}{All input variables for \code{\link{stations}} and \code{\link{phab}} are non-negative, excluding elevation variables in \code{\link{stations}} which may be negative if below sea level (i.e., some locations in southeast California). The variables \code{XBKF_W} and \code{Ev_FlowHab} in \code{\link{phab}} must also be greater than zero.}
+#' \item{}{All input variables for \code{\link{stations}} and \code{\link{phab}} are non-negative, excluding elevation variables in \code{\link{stations}} which may be negative if below sea level (i.e., some locations in southeast California). The variable \code{XBKF_W} in \code{\link{phab}} must also be greater than zero.}
 #' }
 #' 
 #' @export
 #'
 #' @examples
 #' chkinp(stations, phab)
-chkinp <- function(stations, phab, qa = TRUE, allerr = TRUE){
+chkinp <- function(stations, phab, qa = TRUE, allerr = TRUE, log = FALSE){
 
   errs <- list()
   
@@ -213,11 +215,11 @@ chkinp <- function(stations, phab, qa = TRUE, allerr = TRUE){
   }
   
   ##
-  # check for zero values in phab variables XBKF_W, Ev_FlowHab
+  # check for zero values in phab variables XBKF_W
   chk <- phab %>% 
     select(Variable, Result) %>% 
     unique %>% 
-    filter(Variable %in% c('XBKF_W', 'Ev_FlowHab')) %>% 
+    filter(Variable %in% c('XBKF_W')) %>% 
     group_by(Variable) %>% 
     filter(Result == 0) %>% 
     .$Variable %>% 
@@ -239,6 +241,8 @@ chkinp <- function(stations, phab, qa = TRUE, allerr = TRUE){
     errs <- do.call('c', errs) %>% 
       paste(collapse = '\n\n') %>% 
       paste0('\n\n', .)
+    
+    if(log) writeLines(errs, 'log.txt')
     stop(errs, call. = FALSE)
     
   }
